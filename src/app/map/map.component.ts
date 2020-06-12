@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+
 
 import * as L from "leaflet";
+import { MapService } from '../services/map.service';
 
 @Component({
   selector: 'app-map',
@@ -9,14 +11,14 @@ import * as L from "leaflet";
 })
 export class MapComponent implements OnInit {
 
-  options;
+  map: L.Map;
+  options: Object;
 
   zoomOptions = L.control.zoom({
     position: 'bottomright'
   })
 
-
-  constructor() { }
+  constructor(private mapService: MapService) { }
 
   ngOnInit(): void {
     const mapBoundary = new L.LatLngBounds(new L.LatLng(1.1428, 103.585), new L.LatLng(1.488, 104.15));
@@ -38,8 +40,11 @@ export class MapComponent implements OnInit {
   }
 
   onMapReady(map: L.Map) {
+
+    this.map = map;
+    this.mapService.initializeMap(this.map);
+
     //Set zoom controls to bottom right of the map
     L.control.zoom({ position: 'bottomright' }).addTo(map);
   }
-
 }
