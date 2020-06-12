@@ -1,14 +1,21 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
+import { LeafletModule } from "@asymmetrik/ngx-leaflet";
+
 import { AppComponent } from './app.component';
+import { MapComponent } from './map/map.component';
+import { MapLayerComponent } from './map/map-layer/map-layer.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    MapComponent,
+    MapLayerComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    LeafletModule
   ],
   providers: [],
   bootstrap: [AppComponent]
