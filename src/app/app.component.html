@@ -1,1 +1,18 @@
-<app-map></app-map>
+<mat-sidenav-container [hasBackdrop]="false">
+
+  <mat-sidenav #controlpane [(opened)]="controlPaneOpened" (keydown.escape)="closeControlPane(controlpane)">
+    <app-control-pane></app-control-pane>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <app-map></app-map>
+
+    <!-- Sidebar Toggle -->
+    <div *ngIf="!controlPaneOpened" class="toggle-controlpane-container">
+      <button class="toggle-controlpane-button" (click)="openControlPane(controlpane)"></button>
+    </div>
+
+
+  </mat-sidenav-content>
+
+</mat-sidenav-container>

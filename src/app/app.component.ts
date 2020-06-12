@@ -6,5 +6,17 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+
+  controlPaneOpened = false;
   title = 'angular-leaflet';
+
+
+  openControlPane(pane) {
+    pane.open();
+  }
+
+  closeControlPane(pane) {
+    pane.close();
+  }
+
 }
