@@ -32,7 +32,7 @@ export class MapComponent implements OnInit {
       center: [1.3579378, 103.8777261],
       maxZoom: 19,
       minZoom: 12,
-      zoom: 12,
+      zoom: 13,
       zoomControl: false,
       layers: [defaultTile],
       maxBounds: mapBoundary
