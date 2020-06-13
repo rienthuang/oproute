@@ -1,6 +1,26 @@
 <div class="tsp-container">
+
+  <!-- Header -->
   <div class="mat-headline pane-title">
     Optimize Your Route!
     <fa-icon (click)="closeControlPanel()" class="close-pane" [icon]="faCaretLeft"></fa-icon>
   </div>
+
+  <!-- Transit Options -->
+  <div class="transit-options-container">
+    <mat-button-toggle-group #transitOption="matButtonToggleGroup" aria-label="Transit Options" value='drive'>
+      <mat-button-toggle value="drive" [class.active]="transitOption.value==='drive'" aria-label="drive">
+        <fa-icon [icon]="faCar" size="lg"></fa-icon>
+      </mat-button-toggle>
+      <mat-button-toggle value="publicTransport" [class.active]="transitOption.value==='publicTransport'"
+        aria-label="public transport">
+        <fa-icon [icon]="faBusAlt" size="lg"></fa-icon>
+      </mat-button-toggle>
+      <mat-button-toggle value="walk" [class.active]="transitOption.value==='walk'" aria-label="walk">
+        <fa-icon [icon]="faWalking" size="lg"></fa-icon>
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
+
+
 </div>

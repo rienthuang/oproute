@@ -22,3 +22,26 @@
   text-align: center;
   cursor: pointer;
 }
+
+.transit-options-container {
+  height: 50px;
+}
+
+.transit-options-container > mat-button-toggle-group {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.transit-options-container > mat-button-toggle-group > mat-button-toggle {
+  width: 50px;
+  border-radius: 30px;
+  color: #52514e;
+  background-color: #d1d1d1;
+}
+
+.transit-options-container
+  > mat-button-toggle-group
+  > mat-button-toggle.active {
+  color: #eee;
+  background-color: #0074d9;
+}

@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
-import { faCaretLeft } from "@fortawesome/free-solid-svg-icons";
+import { faCaretLeft, faCar, faBusAlt, faWalking } from "@fortawesome/free-solid-svg-icons";
 import { ControlPanelService } from 'src/app/services/control-panel.service';
 
 @Component({
@@ -11,6 +11,11 @@ import { ControlPanelService } from 'src/app/services/control-panel.service';
 export class TspComponent implements OnInit {
 
   faCaretLeft = faCaretLeft;
+  faCar = faCar;
+  faBusAlt = faBusAlt;
+  faWalking = faWalking;
+
+  @ViewChild('transitOption') selectedTransitOption;
 
   constructor(private controlPanelService: ControlPanelService) { }
 
@@ -19,6 +24,11 @@ export class TspComponent implements OnInit {
 
   closeControlPanel() {
     this.controlPanelService.closeControlPanel();
+  }
+
+  print() {
+    console.log(this.selectedTransitOption.value);
+
   }
 
 }
