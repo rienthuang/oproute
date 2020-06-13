@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { faBars, faMap, faDirections, faLayerGroup, faMoon, faSun, faMountain, faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faMap, faDirections, faLayerGroup, faMoon, faSun, faMountain, faQuestionCircle, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 
 @Component({
   selector: 'app-control-pane',
@@ -17,6 +17,7 @@ export class ControlPaneComponent implements OnInit {
   faSun = faSun;
   faMountain = faMountain;
   faQuestionCircle = faQuestionCircle;
+  faInfoCircle = faInfoCircle;
 
   activeTab = 'home'
 
