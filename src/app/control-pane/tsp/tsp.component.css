@@ -39,9 +39,14 @@
   background-color: #d1d1d1;
 }
 
+.transit-options-container > mat-button-toggle-group > mat-button-toggle:hover {
+  color: #eee;
+  background-color: #767676;
+}
+
 .transit-options-container
   > mat-button-toggle-group
   > mat-button-toggle.active {
-  color: #eee;
+  color: #ffffff;
   background-color: #0074d9;
 }
