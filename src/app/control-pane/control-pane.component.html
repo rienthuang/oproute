@@ -1,6 +1,6 @@
 <!-- Tabs -->
 <div class="pane-tabs-container">
-  <div class="pane-tab">
+  <div class="pane-tabs">
     <ul role="tablist">
       <li (click)="onTabClick('home')" [class.active]="activeTab==='home'">
         <fa-icon [icon]="faBars" [styles]="isActiveIcon('home')"></fa-icon> <!-- if active style white-->
@@ -12,6 +12,14 @@
         <fa-icon [icon]="faMap" [styles]="isActiveIcon('map')"></fa-icon>
       </li>
     </ul>
+
+
+    <ul role="tablist" [style]={bottom:0}>
+      <li>
+        <fa-icon [icon]="faSun"></fa-icon> <!-- if active style white-->
+      </li>
+    </ul>
+
   </div>
 </div>
 
