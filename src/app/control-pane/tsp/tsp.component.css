@@ -1,0 +1,24 @@
+.tsp-container {
+  top: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.pane-title {
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  color: white;
+  background-color: #0074d9;
+}
+
+.close-pane {
+  position: absolute;
+  height: 40px;
+  top: 1px;
+  right: 10px;
+  font-size: 16pt;
+  line-height: 40px;
+  text-align: center;
+  cursor: pointer;
+}

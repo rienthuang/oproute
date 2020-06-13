@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { faBars, faMap, faDirections, faLayerGroup, faMoon, faSun, faMountain, faQuestionCircle, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import { ControlPanelService } from '../services/control-panel.service';
 
 @Component({
   selector: 'app-control-pane',
@@ -19,15 +20,16 @@ export class ControlPaneComponent implements OnInit {
   faQuestionCircle = faQuestionCircle;
   faInfoCircle = faInfoCircle;
 
-  activeTab = 'home'
+  activeTab;
 
-  constructor() { }
+  constructor(private controlPanelService: ControlPanelService) { }
 
   ngOnInit(): void {
+    this.activeTab = this.controlPanelService.getActiveTab();
   }
 
   onTabClick(tabClicked: string) {
-    this.activeTab = tabClicked;
+    this.activeTab = this.controlPanelService.setActiveTab(tabClicked);
 
     //Load panel component
   }
