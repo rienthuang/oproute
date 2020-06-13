@@ -40,3 +40,15 @@
 .pane-tab > ul > li.active {
   background-color: #0074d9;
 }
+
+.pane-content-container {
+  position: absolute;
+  overflow-x: hidden;
+  overflow-y: auto;
+  top: 0;
+  bottom: 0;
+  left: 40px;
+  right: 0;
+
+  background-color: yellow;
+}
