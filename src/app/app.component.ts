@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
 
-  controlPaneOpened = false;
+  controlPaneOpened = true;
   title = 'angular-leaflet';
 
 
