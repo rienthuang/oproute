@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ControlPanelService } from './services/control-panel.service';
+import { MatSidenav } from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-root',
@@ -10,13 +12,11 @@ export class AppComponent {
   controlPaneOpened = true;
   title = 'angular-leaflet';
 
+  @ViewChild('controlpane') public controlPanel: MatSidenav;
 
-  openControlPane(pane) {
-    pane.open();
+  constructor(private controlPanelService: ControlPanelService) { }
+
+  ngAfterViewInit(): void {
+    this.controlPanelService.setControlPanel(this.controlPanel);
   }
-
-  closeControlPane(pane) {
-    pane.close();
-  }
-
 }

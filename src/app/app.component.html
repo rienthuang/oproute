@@ -1,6 +1,6 @@
 <mat-sidenav-container [hasBackdrop]="false">
 
-  <mat-sidenav #controlpane [(opened)]="controlPaneOpened" (keydown.escape)="closeControlPane(controlpane)">
+  <mat-sidenav #controlpane [(opened)]="controlPaneOpened" (keydown.escape)="controlpane.close()">
     <app-control-pane></app-control-pane>
   </mat-sidenav>
 
@@ -10,7 +10,7 @@
 
     <!-- Sidebar Toggle -->
     <div *ngIf="!controlPaneOpened" class="toggle-controlpane-container">
-      <button class="toggle-controlpane-button" (click)="openControlPane(controlpane)"></button>
+      <button class="toggle-controlpane-button" (click)="controlpane.open()"></button>
     </div>
 
 

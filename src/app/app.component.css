@@ -25,7 +25,7 @@
 .toggle-controlpane-button {
   width: 24px;
   height: 48px;
-  background: rgba(255, 255, 255)
+  background: rgb(255, 255, 255)
     url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAUCAQAAAAXDMSnAAAAi0lEQVR4AX3JQcqBURQG4O/+9WNG30D3vOfSDTuQsgcZyBakZANSzMVMBme3zsBI5/VMn4ZKLP5ki1E4tYejWpilxVUtzOEUD68odYmXR5BJNp/4zllXD2phllYvamHmirsayUkfJ5ruHzueTldC08kcT5YOY9xYujqQM03XKXuaLmEtNF1e1Nz89gbL+0do6OEwRwAAAABJRU5ErkJggg==)
     7px center/7px 10px no-repeat;
   border: 1px solid #d4d4d4;

@@ -10,6 +10,7 @@ import { MapLayerComponent } from './map/map-layer/map-layer.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from './material/material.module';
 import { ControlPaneComponent } from './control-pane/control-pane.component';
+import { TspComponent } from './control-pane/tsp/tsp.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { ControlPaneComponent } from './control-pane/control-pane.component';
     MapComponent,
     MapLayerComponent,
     ControlPaneComponent,
+    TspComponent,
   ],
   imports: [
     BrowserModule,
