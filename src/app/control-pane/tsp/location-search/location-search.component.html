@@ -9,16 +9,20 @@
       (input)="onSearchChange($event.target.value)"
       (blur)="onBlur()">
 
-    <mat-autocomplete #autocomplete="matAutocomplete" [displayWith]="displayFn"
+    <mat-autocomplete #autocomplete="matAutocomplete"
+      [displayWith]="displayFn"
       (optionSelected)="onOptionSelected($event.option.value)">
-      <mat-option *ngFor=" let option of options" [value]="option">
+      <mat-option *ngFor=" let option of options"
+        [matTooltip]="displayString(option)"
+        [matTooltipPosition]="'right'"
+        [value]="option">
         <div *ngIf="option['BUILDING']!=='NIL'" class="search-option-building">
           {{option['BUILDING']}}
         </div>
         <div class="search-option-address">
           {{option['ADDRESS']}}
         </div>
-        <hr style="margin:0">
+        <hr class="option-separator">
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>

@@ -7,6 +7,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatAutocompleteModule } from "@angular/material/autocomplete";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
+import { MatTooltipModule } from "@angular/material/tooltip";
 
 const MaterialComponents = [
   MatSliderModule,
@@ -16,7 +17,8 @@ const MaterialComponents = [
   MatIconModule,
   MatAutocompleteModule,
   MatFormFieldModule,
-  MatInputModule
+  MatInputModule,
+  MatTooltipModule
 ]
 
 

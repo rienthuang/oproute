@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 import { OneMapService } from 'src/app/services/onemap.service';
 import { FormControl } from '@angular/forms';
 import { TspService } from 'src/app/services/tsp.service';
@@ -6,7 +6,8 @@ import { TspService } from 'src/app/services/tsp.service';
 @Component({
   selector: 'app-location-search',
   templateUrl: './location-search.component.html',
-  styleUrls: ['./location-search.component.css']
+  styleUrls: ['./location-search.component.css'],
+  encapsulation: ViewEncapsulation.None
 })
 export class LocationSearchComponent implements OnInit {
 
@@ -47,6 +48,16 @@ export class LocationSearchComponent implements OnInit {
         ? buildingName
         : address
     }
+  }
+
+  displayString(locationObj): string {
+    let buildingName = locationObj['BUILDING'];
+    let address = locationObj['ADDRESS'];
+
+    return buildingName !== 'NIL'
+      ? buildingName + ', ' + address
+      : address
+
   }
 
   onOptionSelected(locationObj) {
