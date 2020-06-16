@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 
-import { faCaretLeft, faCar, faBusAlt, faWalking, faRoute, faHome } from "@fortawesome/free-solid-svg-icons";
+import { faCaretLeft, faCar, faBusAlt, faWalking, faRoute, faHome, faFlagCheckered } from "@fortawesome/free-solid-svg-icons";
 import { ControlPanelService } from 'src/app/services/control-panel.service';
 import { TspService } from 'src/app/services/tsp.service';
 
@@ -18,6 +18,7 @@ export class TspComponent implements OnInit {
   faWalking = faWalking;
   faHome = faHome;
   faRoute = faRoute;
+  faFlagCheckered = faFlagCheckered;
 
   locationsSelected;
 
