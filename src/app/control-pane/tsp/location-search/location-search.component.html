@@ -1,27 +1,24 @@
-<div class="search-container">
-  <form class="search-form">
-    <mat-form-field style="width:80%">
-      <input type="text"
-        class="search-input"
-        placeholder="Search an Address"
-        matInput
-        [formControl]="searchFormControl"
-        [matAutocomplete]="autocomplete"
-        (input)="onSearchChange($event.target.value)">
+<form class="search-form">
+  <mat-form-field style="width: 95%;">
+    <input matInput
+      type="text"
+      class="search-input"
+      placeholder="Search an Address"
+      [formControl]="searchFormControl"
+      [matAutocomplete]="autocomplete"
+      (input)="onSearchChange($event.target.value)">
 
-      <mat-autocomplete #autocomplete="matAutocomplete" [displayWith]="displayFn"
-        (optionSelected)="onOptionSelected()">
-        <mat-option *ngFor=" let option of options" [value]="option">
-          <div *ngIf="option['BUILDING']!=='NIL'" class="search-option-building">
-            {{option['BUILDING']}}
-          </div>
-          <div class="search-option-address">
-            {{option['ADDRESS']}}
-          </div>
-          <hr style="margin:0">
-        </mat-option>
-      </mat-autocomplete>
-
-    </mat-form-field>
-  </form>
-</div>
+    <mat-autocomplete #autocomplete="matAutocomplete" [displayWith]="displayFn"
+      (optionSelected)="onOptionSelected($event.option.value)">
+      <mat-option *ngFor=" let option of options" [value]="option">
+        <div *ngIf="option['BUILDING']!=='NIL'" class="search-option-building">
+          {{option['BUILDING']}}
+        </div>
+        <div class="search-option-address">
+          {{option['ADDRESS']}}
+        </div>
+        <hr style="margin:0">
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</form>
