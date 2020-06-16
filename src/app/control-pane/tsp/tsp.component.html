@@ -37,7 +37,20 @@
     </mat-button-toggle-group>
   </div>
 
-  <app-location-search></app-location-search>
+  <div class="search-container" *ngFor="let location of locationsSelected; let i = index">
+    <div style="display: inline-block; height: 30x; width: 30px;">
+      <fa-icon [icon]="faHome" size="lg"></fa-icon>
+    </div>
+    <div style="display: inline-block; width: 320px;">
+      <app-location-search [location_index]="i+1"></app-location-search>
+    </div>
+  </div>
+
+  <div *ngIf="locationsSelected.length>3" class="calculate-route-button">
+    <button mat-raised-button style="padding-top: 8px;">
+      <fa-icon [icon]="faRoute" size="3x"></fa-icon>
+    </button>
+  </div>
 
 
 </div>
