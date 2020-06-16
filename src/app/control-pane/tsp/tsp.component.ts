@@ -22,12 +22,15 @@ export class TspComponent implements OnInit {
 
   locationsSelected;
 
+  MAX_LOCATIONS;
+
   @ViewChild('transitOption') selectedTransitOption;
 
   constructor(private controlPanelService: ControlPanelService, private tspService: TspService) { }
 
   ngOnInit(): void {
     this.locationsSelected = this.tspService.getLocationsSelected();
+    this.MAX_LOCATIONS = this.tspService.getMaxLocations();
   }
 
   closeControlPanel() {

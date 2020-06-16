@@ -22,7 +22,7 @@ export class LocationSearchComponent implements OnInit {
 
   ngOnInit(): void {
 
-    let locationExist = this.tspService.getLocationAt(this.index)
+    let locationExist = this.tspService.getLocationAt(this.index);
     if (locationExist) {
       this.locationSelected = locationExist;
       this.searchFormControl.setValue(locationExist);
@@ -72,7 +72,7 @@ export class LocationSearchComponent implements OnInit {
 
   onBlur() {
     //This method forces the search bar to contain a value from the options provided
-    if (this.options.length > 0) {
+    if (!this.locationSelected) {
       this.searchFormControl.setValue(this.options[0]);
     } else {
       this.searchFormControl.setValue(this.locationSelected);

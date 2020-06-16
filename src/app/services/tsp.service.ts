@@ -2,15 +2,15 @@ import { EventEmitter } from '@angular/core';
 
 export class TspService {
 
-  private locationsSelected = [{}];
+  private locationsSelected = [];
+  private MAX_LOCATIONS = 4;
 
   getLocationsSelected() {
     return this.locationsSelected;
   }
 
   addLocation(location) {
-    this.locationsSelected.push(location);
-
+    if (this.locationsSelected.length < this.MAX_LOCATIONS) this.locationsSelected.push(location);
   }
 
   getLocationAt(index) {
@@ -19,6 +19,10 @@ export class TspService {
 
   replaceAt(location, index) {
     this.locationsSelected.splice(index, 1, location);
+  }
+
+  getMaxLocations() {
+    return this.MAX_LOCATIONS;
   }
 
 }
