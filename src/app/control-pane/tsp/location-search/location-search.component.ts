@@ -58,4 +58,13 @@ export class LocationSearchComponent implements OnInit {
       this.tspService.replaceAt(this.locationSelected, this.index);
     }
   }
+
+  onBlur() {
+    //This method forces the search bar to contain a value from the options provided
+    if (this.options.length > 0) {
+      this.searchFormControl.setValue(this.options[0]);
+    } else {
+      this.searchFormControl.setValue(this.locationSelected);
+    }
+  }
 }
