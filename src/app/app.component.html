@@ -1,6 +1,5 @@
 <mat-sidenav-container [hasBackdrop]="false">
-
-  <mat-sidenav #controlpane [(opened)]="controlPaneOpened" (keydown.escape)="controlpane.close()">
+  <mat-sidenav #controlpane [(opened)]="controlPaneOpened" disableClose>
     <app-control-pane></app-control-pane>
   </mat-sidenav>
 
@@ -12,8 +11,5 @@
     <div *ngIf="!controlPaneOpened" class="toggle-controlpane-container">
       <button class="toggle-controlpane-button" (click)="controlpane.open()"></button>
     </div>
-
-
   </mat-sidenav-content>
-
 </mat-sidenav-container>

@@ -1,0 +1,52 @@
+.search-form {
+  width: 100%;
+  margin-left: 10px;
+  font-size: 12pt;
+}
+
+/* .mat-option.mat-option {
+  height: auto;
+}
+
+.mat-option-text.mat-option-text {
+  white-space: normal;
+} */
+
+.mat-autocomplete-panel {
+  /* max-height: 400px !important; */
+}
+
+.search-option-building {
+  height: auto;
+  padding-top: 12px;
+  line-height: normal;
+  font-weight: 500;
+  font-size: 10.5pt;
+
+  /* 1 line */
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.search-option-address {
+  height: auto;
+  padding-top: 5px;
+  line-height: normal;
+  font-weight: 300;
+  font-size: 9pt;
+
+  /* 1 line */
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+option-separator {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.mat-tooltip {
+  font-size: 9pt;
+}

@@ -1,7 +1,7 @@
 .tsp-container {
   top: 0;
   height: 100%;
-  width: 100%;
+  width: 358px;
 }
 
 .pane-title {
@@ -27,6 +27,10 @@
   height: 50px;
 }
 
+.mat-button-toggle-group-appearance-standard {
+  border: none;
+}
+
 .transit-options-container > mat-button-toggle-group {
   display: flex;
   justify-content: space-evenly;
@@ -47,6 +51,29 @@
 .transit-options-container
   > mat-button-toggle-group
   > mat-button-toggle.active {
-  color: #ffffff;
+  color: white;
   background-color: #0074d9;
+}
+
+.search-container {
+  width: 358px;
+  height: 50px;
+  max-height: 390px;
+  padding-top: 10px;
+}
+
+.calculate-route-button {
+  width: 100%;
+  padding-top: 15px;
+  text-align: center;
+}
+
+.calculate-route-button > .mat-raised-button {
+  background-color: #b7edd3;
+  border-radius: 15px;
+  color: #52514e;
+}
+
+.calculate-route-button > .mat-raised-button:hover {
+  background-color: #99c9b2;
 }

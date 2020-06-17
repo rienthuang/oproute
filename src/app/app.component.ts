@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ControlPanelService } from './services/control-panel.service';
 import { MatSidenav } from '@angular/material/sidenav';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-root',
@@ -12,6 +13,7 @@ export class AppComponent {
   controlPaneOpened = true;
   title = 'angular-leaflet';
 
+
   @ViewChild('controlpane') public controlPanel: MatSidenav;
 
   constructor(private controlPanelService: ControlPanelService) { }
@@ -19,4 +21,7 @@ export class AppComponent {
   ngAfterViewInit(): void {
     this.controlPanelService.setControlPanel(this.controlPanel);
   }
+
+
+
 }

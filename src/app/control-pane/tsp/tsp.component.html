@@ -8,27 +8,79 @@
 
   <!-- Transit Options -->
   <div class="transit-options-container">
-    <mat-button-toggle-group #transitOption="matButtonToggleGroup" value='drive' aria-label="Transit Options">
+    <mat-button-toggle-group
+      #transitOption="matButtonToggleGroup"
+      value='drive'
+      aria-label="Transit Options">
 
       <mat-button-toggle value="drive"
         [class.active]="transitOption.value==='drive'"
+        disableRipple="true"
         aria-label="drive">
         <fa-icon [icon]="faCar" size="lg"></fa-icon>
       </mat-button-toggle>
 
       <mat-button-toggle value="publicTransport"
         [class.active]="transitOption.value==='publicTransport'"
+        disableRipple="true"
         aria-label="public transport">
         <fa-icon [icon]="faBusAlt" size="lg"></fa-icon>
       </mat-button-toggle>
 
       <mat-button-toggle value="walk"
         [class.active]="transitOption.value==='walk'"
+        disableRipple="true"
         aria-label="walk">
         <fa-icon [icon]="faWalking" size="lg"></fa-icon>
       </mat-button-toggle>
 
     </mat-button-toggle-group>
+  </div>
+
+  <!-- Compulsory Home Search Component -->
+  <div class="search-container">
+
+    <div style="display: inline-block; height: 30x; width: 30px;">
+      <fa-icon [icon]="faHome" size="lg"></fa-icon>
+    </div>
+
+    <div style="display: inline-block; width: 320px;">
+      <app-location-search [location_index]="0"></app-location-search>
+    </div>
+
+  </div>
+
+  <!-- Additional Optional Search Components once previous components are selected-->
+  <ng-container *ngFor="let location of locationsSelected; let i = index">
+
+    <!-- If MAX_LOCATIONS is x and there are currently x search components displayed, don't give users anymore search components -->
+    <div class="search-container" *ngIf="i+1<MAX_LOCATIONS">
+
+      <!-- Icon -->
+      <div style="display: inline-block; height: 30x; width: 30px;">
+        <!-- Conditions to determine which icon to display -->
+        <mat-icon *ngIf="i+2 < 10; else endIcon">filter_{{i+2}}</mat-icon>
+
+        <ng-template #endIcon>
+          <fa-icon [icon]="faFlagCheckered" size="lg"></fa-icon>
+        </ng-template>
+
+      </div>
+
+      <!-- Search Component -->
+      <div style="display: inline-block; width: 320px;">
+        <app-location-search [location_index]="i+1"></app-location-search>
+      </div>
+
+    </div>
+
+  </ng-container>
+
+  <!-- Calculate Button -->
+  <div *ngIf="locationsSelected.length>=3" class="calculate-route-button">
+    <button mat-raised-button style="padding-top: 8px;">
+      <fa-icon [icon]="faRoute" size="3x"></fa-icon>
+    </button>
   </div>
 
 
