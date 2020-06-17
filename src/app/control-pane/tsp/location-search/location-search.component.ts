@@ -68,8 +68,16 @@ export class LocationSearchComponent implements OnInit {
   onOptionSelected(locationObj) {
     if (!this.locationSelected) {
       this.locationSelected = locationObj;
+
       this.tspService.addLocation(this.locationSelected);
-      this.mapService.addMarker(this.locationSelected, this.index)
+      this.mapService.addMarker(this.locationSelected, this.index);
+      this.mapService.addPolyline(
+        this.locationSelected,
+        this.index,
+        this.tspService.getLocationsSelected(),
+        this.tspService.getModeOfTransport()
+      );
+
     } else {
       this.locationSelected = locationObj;
       this.tspService.replaceAt(this.locationSelected, this.index);

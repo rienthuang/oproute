@@ -37,4 +37,8 @@ export class TspComponent implements OnInit {
     this.controlPanelService.closeControlPanel();
   }
 
+  transitChanged() {
+    this.tspService.setModeOfTransport(this.selectedTransitOption.value);
+  }
+
 }

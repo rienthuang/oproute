@@ -4,6 +4,7 @@ export class TspService {
 
   private locationsSelected = [];
   private MAX_LOCATIONS = 4;
+  private modeOfTransport = 'drive'
 
   getLocationsSelected() {
     return this.locationsSelected;
@@ -23,6 +24,16 @@ export class TspService {
 
   getMaxLocations() {
     return this.MAX_LOCATIONS;
+  }
+
+  getModeOfTransport() {
+    return this.modeOfTransport
+  }
+
+  setModeOfTransport(type: string) {
+    this.modeOfTransport = type;
+
+    //TODO: Recalculate Routing if any is already done
   }
 
 }

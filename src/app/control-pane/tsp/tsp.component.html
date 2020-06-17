@@ -11,6 +11,7 @@
     <mat-button-toggle-group
       #transitOption="matButtonToggleGroup"
       value='drive'
+      (change)="transitChanged()"
       aria-label="Transit Options">
 
       <mat-button-toggle value="drive"

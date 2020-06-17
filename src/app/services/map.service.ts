@@ -1,6 +1,8 @@
-import { Injectable, EventEmitter } from '@angular/core';
+import { Injectable } from '@angular/core';
 
-import { Map, Marker, Icon, Polyline } from "leaflet";
+import { Map, Marker, Icon, Polyline, LatLngBounds } from "leaflet";
+import { OneMapService } from './onemap.service';
+import { PolylineUtilService } from './polyline-util.service';
 
 @Injectable({ providedIn: 'root' })
 export class MapService {
@@ -33,9 +35,11 @@ export class MapService {
   });
 
   private markersLayer: Marker[] = [];
+  private routeGeometryArr: string[] = [];
   private polylineLayer: Polyline[] = [];
+  private mapBounds = [];
 
-
+  constructor(private oneMapService: OneMapService, private polylineUtilService: PolylineUtilService) { }
 
   initializeMap(map: Map) {
     this.map = map;
@@ -47,6 +51,10 @@ export class MapService {
 
   getMarkers(): Marker[] {
     return this.markersLayer;
+  }
+
+  getRouteGeometryArr(): string[] {
+    return this.routeGeometryArr
   }
 
   getPolylineLayer(): Polyline[] {
@@ -77,4 +85,33 @@ export class MapService {
     this.markersLayer.splice(index, 1, marker);
   }
 
+  addPolyline(toLocationObj, index, existingLocations, modeOfTransport): void {
+    if (index === 0) return;
+
+    let fromLocationObj = existingLocations[index - 1];
+
+    //Get Route Geometry through API Call to OneMap
+    this.oneMapService.getRoute(fromLocationObj, toLocationObj, modeOfTransport)
+      .subscribe((response) => {
+        let routeGeometry = response['route_geometry'];
+        let polyLineOptions = {
+          color: 'red',
+          weight: 3
+        };
+
+        let polyline = new Polyline(this.polylineUtilService.decode(routeGeometry, 5), polyLineOptions);
+        this.polylineLayer.push(polyline);
+        this.addMapBound(polyline.getBounds());
+
+      })
+  }
+
+  addMapBound(bounds: LatLngBounds) {
+    this.mapBounds.push(bounds);
+    this.map.fitBounds(this.mapBounds);
+  }
+
 }
+
+
+
