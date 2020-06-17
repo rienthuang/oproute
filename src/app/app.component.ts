@@ -10,7 +10,7 @@ import { FormControl } from '@angular/forms';
 })
 export class AppComponent {
 
-  controlPaneOpened = false;
+  controlPaneOpened = true;
   title = 'angular-leaflet';
 
 
