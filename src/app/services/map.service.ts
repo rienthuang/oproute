@@ -35,6 +35,8 @@ export class MapService {
     shadowSize: [41, 41]
   });
 
+  private ENCODER_PRECISION = 5;
+
   private markersLayer: Marker[] = [];
   private polylineLayer: Polyline[] = [];
   private mapBounds = [];
@@ -112,7 +114,7 @@ export class MapService {
       .subscribe((response) => {
         let routeGeometry = response['route_geometry'];
 
-        let polyline = new Polyline(this.polylineUtilService.decode(routeGeometry, 5), polylineOptions);
+        let polyline = new Polyline(this.polylineUtilService.decode(routeGeometry, this.ENCODER_PRECISION), polylineOptions);
         this.polylineLayer.push(polyline);
         this.addMapBounds(polyline.getBounds());
 
@@ -156,7 +158,7 @@ export class MapService {
       this.oneMapService.getRoute(fromLocationObj, toLocationObj, modeOfTransport)
         .subscribe((response) => {
           let routeGeometry = response['route_geometry'];
-          let polyline = new Polyline(this.polylineUtilService.decode(routeGeometry, 5), polylineOptions);
+          let polyline = new Polyline(this.polylineUtilService.decode(routeGeometry, this.ENCODER_PRECISION), polylineOptions);
 
           if (startLocation) {
             this.polylineLayer.splice(index, 1, polyline);
@@ -174,7 +176,7 @@ export class MapService {
       this.oneMapService.getRoute(fromLocationObj, locationObj, modeOfTransport)
         .subscribe((response) => {
           let routeGeometry = response['route_geometry'];
-          let polyline = new Polyline(this.polylineUtilService.decode(routeGeometry, 5), polylineOptions);
+          let polyline = new Polyline(this.polylineUtilService.decode(routeGeometry, this.ENCODER_PRECISION), polylineOptions);
           this.polylineLayer.splice(index - 1, 1, polyline);
           this.replaceMapBounds(index - 1, polyline.getBounds(), false);
 
@@ -184,7 +186,7 @@ export class MapService {
       this.oneMapService.getRoute(locationObj, toLocationObj, modeOfTransport)
         .subscribe((response) => {
           let routeGeometry = response['route_geometry'];
-          let polyline = new Polyline(this.polylineUtilService.decode(routeGeometry, 5), polylineOptions);
+          let polyline = new Polyline(this.polylineUtilService.decode(routeGeometry, this.ENCODER_PRECISION), polylineOptions);
           this.polylineLayer.splice(index, 1, polyline);
           this.replaceMapBounds(index, polyline.getBounds(), true);
 
@@ -195,6 +197,44 @@ export class MapService {
 
   }
 
+  deletePolylineAt(index, updatedLocations, modeOfTransport, polylineOptions): void {
+
+    console.log('in deletepolyline service');
+
+    console.log(updatedLocations);
+
+
+    let lastLocation = index === updatedLocations.length;
+
+    if (lastLocation) {
+      this.polylineLayer.splice(index - 1, 1);
+      this.deleteMapBoundsAt(index - 1);
+
+      this.polylineChanged.next(this.polylineLayer);
+
+    } else {
+      //Middle location. It's always going to have a before and after index since the app doesn't allow users to delete Home Base
+      //Get the new direct route polyline layer and replace existing ones
+      let fromLocationObj = updatedLocations[index - 1];
+      let toLocationObj = updatedLocations[index];
+
+      this.oneMapService.getRoute(fromLocationObj, toLocationObj, modeOfTransport)
+        .subscribe((response) => {
+          let newRouteGeometry = response['route_geometry'];
+          let newPolyline = new Polyline(this.polylineUtilService.decode(newRouteGeometry, this.ENCODER_PRECISION), polylineOptions);
+
+          this.polylineLayer.splice(index, 1, newPolyline);
+          this.polylineLayer.splice(index - 1, 1);
+
+          this.replaceMapBounds(index, newPolyline.getBounds(), false);
+          this.deleteMapBoundsAt(index - 1);
+
+          this.polylineChanged.next(this.polylineLayer);
+
+        })
+    }
+  }
+
   addMapBounds(bounds: LatLngBounds) {
     this.mapBounds.push(bounds);
     this.map.fitBounds(this.mapBounds);
@@ -203,6 +243,11 @@ export class MapService {
   replaceMapBounds(index: number, bounds: LatLngBounds, fitBounds: boolean) {
     this.mapBounds.splice(index, 1, bounds);
     if (fitBounds) this.map.fitBounds(this.mapBounds);
+  }
+
+  deleteMapBoundsAt(index: number) {
+    this.mapBounds.splice(index, 1);
+    this.map.fitBounds(this.mapBounds);
   }
 
 }

@@ -33,6 +33,14 @@ export class LocationSearchComponent implements OnInit {
       this.locationSelected = locationExist;
       this.searchFormControl.setValue(locationExist);
     }
+
+    this.tspService.locationDeleted.subscribe((deletedIndex) => {
+      if (deletedIndex === this.index) {
+        this.locationSelected = this.tspService.getLocationAt(this.index);
+        this.searchFormControl.setValue(this.locationSelected)
+      }
+    })
+
   }
 
   ngOnDestroy(): void {

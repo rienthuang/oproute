@@ -5,10 +5,11 @@ import { LocationObj } from "src/app/models/location.model";
 export class TspService {
 
   private locationsSelected: LocationObj[] = [];
-  private MAX_LOCATIONS = 4;
+  private MAX_LOCATIONS = 6;
   private modeOfTransport = 'drive'
 
   public locationsSelectedChanged = new Subject<LocationObj[]>();
+  public locationDeleted = new Subject<number>();
 
 
   getLocationsSelected() {
@@ -30,7 +31,9 @@ export class TspService {
   }
 
   deleteLocationAt(index) {
-
+    this.locationsSelected.splice(index, 1);
+    this.locationsSelectedChanged.next(this.locationsSelected.slice());
+    this.locationDeleted.next(index);
   }
 
   getMaxLocations() {

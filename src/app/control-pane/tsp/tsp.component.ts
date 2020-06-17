@@ -85,8 +85,9 @@ export class TspComponent implements OnInit, OnDestroy {
   }
 
   deleteLocation(index: number) {
-    //TODO
     this.tspService.deleteLocationAt(index);
+    this.mapService.deletePolylineAt(index, this.tspService.getLocationsSelected(), this.selectedTransitOption.value, { color: 'red', weight: 5 })
+    this.mapService.deleteMarkerAt(index);
   }
 
 }
