@@ -199,16 +199,18 @@ export class MapService {
 
   deletePolylineAt(index, updatedLocations, modeOfTransport, polylineOptions): void {
 
-    console.log('in deletepolyline service');
-
-    console.log(updatedLocations);
-
-
     let lastLocation = index === updatedLocations.length;
 
     if (lastLocation) {
       this.polylineLayer.splice(index - 1, 1);
-      this.deleteMapBoundsAt(index - 1);
+
+      if (updatedLocations.length === 1) {
+        this.deleteMapBoundsAt(index - 1, false);
+        this.focusOnMarker(this.getMarkers()[0]);
+      } else {
+        this.deleteMapBoundsAt(index - 1, true);
+      }
+
 
       this.polylineChanged.next(this.polylineLayer);
 
@@ -227,7 +229,7 @@ export class MapService {
           this.polylineLayer.splice(index - 1, 1);
 
           this.replaceMapBounds(index, newPolyline.getBounds(), false);
-          this.deleteMapBoundsAt(index - 1);
+          this.deleteMapBoundsAt(index - 1, true);
 
           this.polylineChanged.next(this.polylineLayer);
 
@@ -245,9 +247,9 @@ export class MapService {
     if (fitBounds) this.map.fitBounds(this.mapBounds);
   }
 
-  deleteMapBoundsAt(index: number) {
+  deleteMapBoundsAt(index: number, fitBounds: boolean) {
     this.mapBounds.splice(index, 1);
-    this.map.fitBounds(this.mapBounds);
+    if (fitBounds) this.map.fitBounds(this.mapBounds);
   }
 
 }

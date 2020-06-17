@@ -45,7 +45,6 @@ export class LocationSearchComponent implements OnInit {
 
   ngOnDestroy(): void {
     console.log('search component index ' + this.index + ' destroyed');
-
   }
 
   onSearchChange(searchValue: string): void {
