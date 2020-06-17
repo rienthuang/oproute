@@ -75,13 +75,21 @@ export class LocationSearchComponent implements OnInit {
         this.locationSelected,
         this.index,
         this.tspService.getLocationsSelected(),
-        this.tspService.getModeOfTransport()
+        this.tspService.getModeOfTransport(),
+        { color: 'red', weight: 5 }
       );
 
     } else {
       this.locationSelected = locationObj;
       this.tspService.replaceAt(this.locationSelected, this.index);
       this.mapService.replaceMarkerAt(this.locationSelected, this.index);
+      this.mapService.replacePolylineAt(
+        this.locationSelected,
+        this.index,
+        this.tspService.getLocationsSelected(),
+        this.tspService.getModeOfTransport(),
+        { color: 'red', weight: 5 }
+      );
     }
   }
 
