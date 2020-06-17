@@ -2,6 +2,7 @@ import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 import { OneMapService } from 'src/app/services/onemap.service';
 import { FormControl } from '@angular/forms';
 import { TspService } from 'src/app/services/tsp.service';
+import { MapService } from 'src/app/services/map.service';
 
 @Component({
   selector: 'app-location-search',
@@ -18,7 +19,11 @@ export class LocationSearchComponent implements OnInit {
 
   @Input('location_index') index;
 
-  constructor(private oneMapService: OneMapService, private tspService: TspService) { }
+  constructor(
+    private oneMapService: OneMapService,
+    private tspService: TspService,
+    private mapService: MapService
+  ) { }
 
   ngOnInit(): void {
 
@@ -64,9 +69,11 @@ export class LocationSearchComponent implements OnInit {
     if (!this.locationSelected) {
       this.locationSelected = locationObj;
       this.tspService.addLocation(this.locationSelected);
+      this.mapService.addMarker(this.locationSelected, this.index)
     } else {
       this.locationSelected = locationObj;
       this.tspService.replaceAt(this.locationSelected, this.index);
+      this.mapService.replaceMarkerAt(this.locationSelected, this.index);
     }
   }
 
