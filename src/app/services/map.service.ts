@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Map, Marker, Icon, Polyline, LatLngBounds } from "leaflet";
 import { OneMapService } from './onemap.service';
 import { PolylineUtilService } from './polyline-util.service';
-import { from } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class MapService {
@@ -72,6 +71,8 @@ export class MapService {
 
     let marker = new Marker([latitude, longitude], { icon: icon });
     this.markersLayer.push(marker);
+
+    if (index === 0) this.focusOnMarker(marker);
   }
 
   replaceMarkerAt(locationObj, index): void {
@@ -84,6 +85,14 @@ export class MapService {
 
     let marker = new Marker([latitude, longitude], { icon: icon });
     this.markersLayer.splice(index, 1, marker);
+
+    if (index === 0) this.focusOnMarker(marker);
+
+  }
+
+  focusOnMarker(marker: Marker) {
+    let markerBounds = new LatLngBounds(marker.getLatLng(), marker.getLatLng());
+    this.map.fitBounds(markerBounds, { maxZoom: 14 });
   }
 
   addPolyline(toLocationObj, index, existingLocations, modeOfTransport, polylineOptions): void {
@@ -104,8 +113,6 @@ export class MapService {
   }
 
   replacePolylineAt(locationObj, index, existingLocations, modeOfTransport, polylineOptions): void {
-
-    console.log('replacing polyline called');
 
     //only location so far, no polyline to draw
     if (index === 0 && existingLocations.length === 1) return;
@@ -143,23 +150,17 @@ export class MapService {
           let polyline = new Polyline(this.polylineUtilService.decode(routeGeometry, 5), polylineOptions);
 
           if (startLocation) {
-            console.log('replacing start');
             this.polylineLayer.splice(index, 1, polyline);
             this.replaceMapBounds(index, polyline.getBounds(), true);
           } else {
-            console.log('replacing end');
             this.polylineLayer.splice(index - 1, 1, polyline);
             this.replaceMapBounds(index - 1, polyline.getBounds(), true);
           }
         })
     } else {
-      console.log('Middle location');
-
       //Perform 2 API call to OneMap asynchronously
       this.oneMapService.getRoute(fromLocationObj, locationObj, modeOfTransport)
         .subscribe((response) => {
-          console.log('from to middle called');
-
           let routeGeometry = response['route_geometry'];
           let polyline = new Polyline(this.polylineUtilService.decode(routeGeometry, 5), polylineOptions);
           this.polylineLayer.splice(index - 1, 1, polyline);
@@ -168,8 +169,6 @@ export class MapService {
 
       this.oneMapService.getRoute(locationObj, toLocationObj, modeOfTransport)
         .subscribe((response) => {
-          console.log('middle to end called');
-
           let routeGeometry = response['route_geometry'];
           let polyline = new Polyline(this.polylineUtilService.decode(routeGeometry, 5), polylineOptions);
           this.polylineLayer.splice(index, 1, polyline);
