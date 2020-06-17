@@ -55,7 +55,8 @@
   <ng-container *ngFor="let location of locationsSelected; let i = index">
 
     <!-- If MAX_LOCATIONS is x and there are currently x search components displayed, don't give users anymore search components -->
-    <div class="search-container" *ngIf="i+1<MAX_LOCATIONS" [@divFlyAnimation]>
+    <!-- <div class="search-container" *ngIf="i+1<MAX_LOCATIONS" [@divFlyAnimation]> -->
+    <div class="search-container" *ngIf="i+1<MAX_LOCATIONS">
 
       <!-- Icon -->
       <div style="display: inline-block; height: 30x; width: 30px;">
@@ -69,9 +70,14 @@
       </div>
 
       <!-- Search Component -->
-      <div style="display: inline-block; width: 320px;">
+      <div style="display: inline-block; width: 295px;">
         <!-- i+1 to account for the initial compulsory home location. Thus i will represent index in locations array -->
         <app-location-search [location_index]="i+1"></app-location-search>
+      </div>
+
+      <!-- Delete Icon -->
+      <div style="display: inline-block;">
+        <mat-icon style="cursor: pointer;" (click)="deleteLocation(i+1)">delete</mat-icon>
       </div>
 
     </div>

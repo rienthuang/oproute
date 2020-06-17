@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import { tileLayer } from "leaflet";
+import { tileLayer, Marker, Polyline } from "leaflet";
 import { MapService } from 'src/app/services/map.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-map-layer',
   templateUrl: './map-layer.component.html',
   styleUrls: ['./map-layer.component.css']
 })
-export class MapLayerComponent implements OnInit {
+export class MapLayerComponent implements OnInit, OnDestroy {
 
 
   showLandLayer = false;
@@ -25,14 +26,30 @@ export class MapLayerComponent implements OnInit {
     attribution: 'Map data &copy contributors, <a href="https://www.sla.gov.sg/" target="_blank" rel="noopener noreferrer">Singapore Land Authority</a> &nbsp;&#124;&nbsp; <a href="https://tech.gov.sg/report_vulnerability" target="_blank">Report Vulnerability</a>',
   });
 
-  markersLayer = [];
+  markersLayer: Marker[] = [];
   polylineLayer = [];
+
+  markersChangedSubscription: Subscription;
+  polylineChangedSubscription: Subscription;
 
   constructor(private mapService: MapService) { }
 
   ngOnInit(): void {
     this.markersLayer = this.mapService.getMarkers();
     this.polylineLayer = this.mapService.getPolylineLayer();
+
+    this.markersChangedSubscription = this.mapService.markersChanged.subscribe((updatedMarkers: Marker[]) => {
+      this.markersLayer = updatedMarkers;
+    });
+
+    this.polylineChangedSubscription = this.mapService.polylineChanged.subscribe((updatedPolyline: Polyline[]) => {
+      this.polylineLayer = updatedPolyline;
+    })
+  }
+
+  ngOnDestroy(): void {
+    this.markersChangedSubscription.unsubscribe();
+    this.polylineChangedSubscription.unsubscribe();
   }
 
 }

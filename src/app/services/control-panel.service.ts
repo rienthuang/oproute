@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { control } from 'leaflet';
-import { EventEmitter } from 'events';
 import { MatSidenav } from '@angular/material/sidenav';
 
 @Injectable({ providedIn: 'root' })

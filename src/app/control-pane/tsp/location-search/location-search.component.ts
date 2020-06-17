@@ -26,12 +26,18 @@ export class LocationSearchComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    console.log('location search component init. index = ' + this.index);
 
     let locationExist = this.tspService.getLocationAt(this.index);
     if (locationExist) {
       this.locationSelected = locationExist;
       this.searchFormControl.setValue(locationExist);
     }
+  }
+
+  ngOnDestroy(): void {
+    console.log('search component index ' + this.index + ' destroyed');
+
   }
 
   onSearchChange(searchValue: string): void {

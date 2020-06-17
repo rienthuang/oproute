@@ -1,17 +1,23 @@
-import { EventEmitter } from '@angular/core';
+import { Subject } from 'rxjs';
+import { MapService } from './map.service';
+import { LocationObj } from "src/app/models/location.model";
 
 export class TspService {
 
-  private locationsSelected = [];
+  private locationsSelected: LocationObj[] = [];
   private MAX_LOCATIONS = 4;
   private modeOfTransport = 'drive'
 
+  public locationsSelectedChanged = new Subject<LocationObj[]>();
+
+
   getLocationsSelected() {
-    return this.locationsSelected;
+    return this.locationsSelected.slice();
   }
 
   addLocation(location) {
     if (this.locationsSelected.length < this.MAX_LOCATIONS) this.locationsSelected.push(location);
+    this.locationsSelectedChanged.next(this.locationsSelected.slice());
   }
 
   getLocationAt(index) {
@@ -20,6 +26,11 @@ export class TspService {
 
   replaceAt(location, index) {
     this.locationsSelected.splice(index, 1, location);
+    this.locationsSelectedChanged.next(this.locationsSelected.slice());
+  }
+
+  deleteLocationAt(index) {
+
   }
 
   getMaxLocations() {

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Map, Marker, Icon, Polyline, LatLngBounds } from "leaflet";
 import { OneMapService } from './onemap.service';
 import { PolylineUtilService } from './polyline-util.service';
+import { Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class MapService {
@@ -35,9 +36,11 @@ export class MapService {
   });
 
   private markersLayer: Marker[] = [];
-  private routeGeometryArr: string[] = [];
   private polylineLayer: Polyline[] = [];
   private mapBounds = [];
+
+  public markersChanged = new Subject<Marker[]>();
+  public polylineChanged = new Subject<Polyline[]>();
 
   constructor(private oneMapService: OneMapService, private polylineUtilService: PolylineUtilService) { }
 
@@ -50,15 +53,11 @@ export class MapService {
   }
 
   getMarkers(): Marker[] {
-    return this.markersLayer;
-  }
-
-  getRouteGeometryArr(): string[] {
-    return this.routeGeometryArr
+    return this.markersLayer.slice();
   }
 
   getPolylineLayer(): Polyline[] {
-    return this.polylineLayer;
+    return this.polylineLayer.slice();
   }
 
   addMarker(locationObj, index): void {
@@ -73,6 +72,8 @@ export class MapService {
     this.markersLayer.push(marker);
 
     if (index === 0) this.focusOnMarker(marker);
+
+    this.markersChanged.next(this.markersLayer.slice());
   }
 
   replaceMarkerAt(locationObj, index): void {
@@ -88,6 +89,12 @@ export class MapService {
 
     if (index === 0) this.focusOnMarker(marker);
 
+    this.markersChanged.next(this.markersLayer.slice());
+  }
+
+  deleteMarkerAt(index): void {
+    this.markersLayer.splice(index, 1);
+    this.markersChanged.next(this.markersLayer.slice());
   }
 
   focusOnMarker(marker: Marker) {
@@ -108,6 +115,8 @@ export class MapService {
         let polyline = new Polyline(this.polylineUtilService.decode(routeGeometry, 5), polylineOptions);
         this.polylineLayer.push(polyline);
         this.addMapBounds(polyline.getBounds());
+
+        this.polylineChanged.next(this.polylineLayer);
 
       })
   }
@@ -156,6 +165,9 @@ export class MapService {
             this.polylineLayer.splice(index - 1, 1, polyline);
             this.replaceMapBounds(index - 1, polyline.getBounds(), true);
           }
+
+          this.polylineChanged.next(this.polylineLayer);
+
         })
     } else {
       //Perform 2 API call to OneMap asynchronously
@@ -165,14 +177,19 @@ export class MapService {
           let polyline = new Polyline(this.polylineUtilService.decode(routeGeometry, 5), polylineOptions);
           this.polylineLayer.splice(index - 1, 1, polyline);
           this.replaceMapBounds(index - 1, polyline.getBounds(), false);
-        });
 
+          this.polylineChanged.next(this.polylineLayer);
+
+        });
       this.oneMapService.getRoute(locationObj, toLocationObj, modeOfTransport)
         .subscribe((response) => {
           let routeGeometry = response['route_geometry'];
           let polyline = new Polyline(this.polylineUtilService.decode(routeGeometry, 5), polylineOptions);
           this.polylineLayer.splice(index, 1, polyline);
           this.replaceMapBounds(index, polyline.getBounds(), true);
+
+          this.polylineChanged.next(this.polylineLayer);
+
         })
     }
 
