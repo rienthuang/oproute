@@ -4,6 +4,7 @@ import { HttpClientModule } from "@angular/common/http";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from "@angular/forms";
 import { ReactiveFormsModule } from "@angular/forms";
+import { DragDropModule } from "@angular/cdk/drag-drop";
 
 import { LeafletModule } from "@asymmetrik/ngx-leaflet";
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
@@ -33,7 +34,8 @@ import { LocationSearchComponent } from './control-pane/tsp/location-search/loca
     BrowserAnimationsModule,
     MaterialModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    DragDropModule
   ],
   providers: [],
   bootstrap: [AppComponent]

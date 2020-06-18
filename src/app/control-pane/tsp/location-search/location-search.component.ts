@@ -1,8 +1,10 @@
-import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Input, ViewEncapsulation, ViewChild } from '@angular/core';
 import { OneMapService } from 'src/app/services/onemap.service';
 import { FormControl } from '@angular/forms';
 import { TspService } from 'src/app/services/tsp.service';
 import { MapService } from 'src/app/services/map.service';
+import { LocationObj } from 'src/app/models/location.model';
+import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-location-search',
@@ -15,9 +17,11 @@ export class LocationSearchComponent implements OnInit {
   searchFormControl = new FormControl();
 
   options = [];
-  locationSelected;
+  locationSelected: LocationObj;
+  optionSelected = false;
 
   @Input('location_index') index;
+  @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
 
   constructor(
     private oneMapService: OneMapService,
@@ -32,6 +36,7 @@ export class LocationSearchComponent implements OnInit {
     if (locationExist) {
       this.locationSelected = locationExist;
       this.searchFormControl.setValue(locationExist);
+      this.optionSelected = true;
     }
 
     this.tspService.locationDeleted.subscribe((deletedIndex) => {
@@ -56,7 +61,7 @@ export class LocationSearchComponent implements OnInit {
     }
   }
 
-  displayFn(locationObj) {
+  displayFn(locationObj: LocationObj) {
     if (locationObj) {
 
       let buildingName = locationObj['BUILDING'];
@@ -68,7 +73,7 @@ export class LocationSearchComponent implements OnInit {
     }
   }
 
-  displayString(locationObj): string {
+  displayString(locationObj: LocationObj): string {
     let buildingName = locationObj['BUILDING'];
     let address = locationObj['ADDRESS'];
 
@@ -78,7 +83,7 @@ export class LocationSearchComponent implements OnInit {
 
   }
 
-  onOptionSelected(locationObj) {
+  onOptionSelected(locationObj: LocationObj) {
     if (!this.locationSelected) {
       this.locationSelected = locationObj;
 
@@ -104,14 +109,24 @@ export class LocationSearchComponent implements OnInit {
         { color: 'red', weight: 5 }
       );
     }
+    this.optionSelected = true;
   }
 
   onBlur() {
-    //This method forces the search bar to contain a value from the options provided
-    if (!this.locationSelected) {
-      this.searchFormControl.setValue(this.options[0]);
-    } else {
+    //This auto populate the previously selected valid option if the current input is an invalid option
+    if (this.locationSelected) {
       this.searchFormControl.setValue(this.locationSelected);
     }
+  }
+
+  // Think whether to add this feature or not
+  // Automatically populate search with first option on Enter key
+  // Useful for my development when testing
+  onKeydown(keydownEvent: KeyboardEvent) {
+    if (keydownEvent.code !== 'Enter' || this.options.length === 0) return;
+    this.locationSelected = this.options[0];
+    this.searchFormControl.setValue(this.locationSelected);
+    this.onOptionSelected(this.locationSelected);
+    this.autocomplete.closePanel();
   }
 }
