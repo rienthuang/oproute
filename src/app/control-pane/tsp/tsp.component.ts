@@ -46,7 +46,7 @@ export class TspComponent implements OnInit, OnDestroy {
   faRoute = faRoute;
   faFlagCheckered = faFlagCheckered;
 
-  locationsSelected;
+  locationsSelected: LocationObj[];
 
   MAX_LOCATIONS;
 

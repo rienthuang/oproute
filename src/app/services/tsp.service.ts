@@ -12,39 +12,39 @@ export class TspService {
   public locationDeleted = new Subject<number>();
 
 
-  getLocationsSelected() {
+  getLocationsSelected(): LocationObj[] {
     return this.locationsSelected.slice();
   }
 
-  addLocation(location) {
+  addLocation(location): void {
     if (this.locationsSelected.length < this.MAX_LOCATIONS) this.locationsSelected.push(location);
     this.locationsSelectedChanged.next(this.locationsSelected.slice());
   }
 
-  getLocationAt(index) {
+  getLocationAt(index): LocationObj {
     return this.locationsSelected[index];
   }
 
-  replaceAt(location, index) {
+  replaceAt(location, index): void {
     this.locationsSelected.splice(index, 1, location);
     this.locationsSelectedChanged.next(this.locationsSelected.slice());
   }
 
-  deleteLocationAt(index) {
+  deleteLocationAt(index): void {
     this.locationsSelected.splice(index, 1);
     this.locationsSelectedChanged.next(this.locationsSelected.slice());
     this.locationDeleted.next(index);
   }
 
-  getMaxLocations() {
+  getMaxLocations(): number {
     return this.MAX_LOCATIONS;
   }
 
-  getModeOfTransport() {
+  getModeOfTransport(): string {
     return this.modeOfTransport
   }
 
-  setModeOfTransport(type: string) {
+  setModeOfTransport(type: string): void {
     this.modeOfTransport = type;
 
     //TODO: Recalculate Routing if any is already done
