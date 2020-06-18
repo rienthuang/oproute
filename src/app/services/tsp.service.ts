@@ -16,6 +16,11 @@ export class TspService {
     return this.locationsSelected.slice();
   }
 
+  setLocationsSelected(newLocationsSelected: LocationObj[]) {
+    this.locationsSelected = newLocationsSelected.slice();
+    this.locationsSelectedChanged.next(this.locationsSelected.slice());
+  }
+
   addLocation(location): void {
     if (this.locationsSelected.length < this.MAX_LOCATIONS) this.locationsSelected.push(location);
     this.locationsSelectedChanged.next(this.locationsSelected.slice());

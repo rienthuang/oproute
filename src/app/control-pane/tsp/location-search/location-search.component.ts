@@ -5,6 +5,7 @@ import { TspService } from 'src/app/services/tsp.service';
 import { MapService } from 'src/app/services/map.service';
 import { LocationObj } from 'src/app/models/location.model';
 import { MatAutocompleteTrigger } from '@angular/material/autocomplete';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-location-search',
@@ -23,6 +24,8 @@ export class LocationSearchComponent implements OnInit {
   @Input('location_index') index;
   @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
 
+  locationDeletedSubscription: Subscription;
+
   constructor(
     private oneMapService: OneMapService,
     private tspService: TspService,
@@ -39,17 +42,17 @@ export class LocationSearchComponent implements OnInit {
       this.optionSelected = true;
     }
 
-    this.tspService.locationDeleted.subscribe((deletedIndex) => {
+    this.locationDeletedSubscription = this.tspService.locationDeleted.subscribe((deletedIndex) => {
       if (deletedIndex === this.index) {
         this.locationSelected = this.tspService.getLocationAt(this.index);
         this.searchFormControl.setValue(this.locationSelected)
       }
     })
-
   }
 
   ngOnDestroy(): void {
     console.log('search component index ' + this.index + ' destroyed');
+    this.locationDeletedSubscription.unsubscribe();
   }
 
   onSearchChange(searchValue: string): void {
