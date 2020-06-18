@@ -7,6 +7,7 @@ import { trigger, style, state, transition, animate } from '@angular/animations'
 import { MapService } from 'src/app/services/map.service';
 import { LocationObj } from 'src/app/models/location.model';
 import { Subscription } from 'rxjs';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-tsp',
@@ -89,5 +90,4 @@ export class TspComponent implements OnInit, OnDestroy {
     this.mapService.deletePolylineAt(index, this.tspService.getLocationsSelected(), this.selectedTransitOption.value, { color: 'red', weight: 5 })
     this.mapService.deleteMarkerAt(index);
   }
-
 }
