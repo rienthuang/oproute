@@ -16,6 +16,10 @@
   /* max-height: 400px !important; */
 }
 
+.selected {
+  color: green !important;
+}
+
 .search-option-building {
   height: auto;
   padding-top: 12px;

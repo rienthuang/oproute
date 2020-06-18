@@ -2,7 +2,7 @@
   <mat-form-field style="width: 95%;">
     <input matInput
       type="text"
-      class="search-input"
+      [class.selected]="optionSelected"
       placeholder="Search an Address"
       [formControl]="searchFormControl"
       [matAutocomplete]="autocomplete"

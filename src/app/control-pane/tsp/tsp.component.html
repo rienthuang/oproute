@@ -55,8 +55,8 @@
   <ng-container *ngFor="let location of locationsSelected; let i = index">
 
     <!-- If MAX_LOCATIONS is x and there are currently x search components displayed, don't give users anymore search components -->
-    <!-- <div class="search-container" *ngIf="i+1<MAX_LOCATIONS" [@divFlyAnimation]> -->
     <div class="search-container" *ngIf="i+1<MAX_LOCATIONS">
+      <!-- <div class="search-container" *ngIf="i+1<MAX_LOCATIONS"> -->
 
       <!-- Icon -->
       <div style="display: inline-block; height: 30x; width: 30px;">
