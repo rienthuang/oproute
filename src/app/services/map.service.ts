@@ -5,6 +5,7 @@ import { OneMapService } from './onemap.service';
 import { PolylineUtilService } from './polyline-util.service';
 import { Subject, Observable } from 'rxjs';
 import { LocationObj } from '../models/location.model';
+import { SpinnerService } from './spinner.service';
 
 @Injectable({ providedIn: 'root' })
 export class MapService {
@@ -45,7 +46,7 @@ export class MapService {
   public markersChanged = new Subject<Marker[]>();
   public polylineChanged = new Subject<Polyline[]>();
 
-  constructor(private oneMapService: OneMapService, private polylineUtilService: PolylineUtilService) { }
+  constructor(private oneMapService: OneMapService, private polylineUtilService: PolylineUtilService, private spinnerService: SpinnerService) { }
 
   initializeMap(map: Map) {
     this.map = map;
@@ -64,18 +65,28 @@ export class MapService {
   }
 
   addNewLocationToMap(location: LocationObj, index: number, existingLocations: LocationObj[], modeOfTransport: string): void {
+
+    this.spinnerService.mapIsChanging.next(true);
+
     //Add Marker
     this.addMarker(location, index);
 
     //Add Polyline if it's not the only location
-    if (index === 0) return;
+    if (index === 0) {
+      this.spinnerService.mapIsChanging.next(false);
+      return;
+    }
     this.oneMapService.getGeometryRoute(existingLocations[index - 1], existingLocations[index], modeOfTransport)
       .subscribe((routeGeometry: string) => {
         this.addPolyline('red', 3, routeGeometry);
+        this.spinnerService.mapIsChanging.next(false);
       })
   }
 
   replaceLocationOnMap(newLocation: LocationObj, index: number, existingLocations: LocationObj[], modeOfTransport: string): void {
+
+    this.spinnerService.mapIsChanging.next(true);
+
     //Replace Marker
     this.replaceMarkerAt(newLocation, index);
 
@@ -97,6 +108,7 @@ export class MapService {
       this.oneMapService.getGeometryRoute(fromLocation, toLocation, modeOfTransport)
         .subscribe((routeGeometry: string) => {
           this.replacePolylineAt(routeGeometry, index, 'red', 3, true);
+          this.spinnerService.mapIsChanging.next(false);
         })
 
     } else if (newLastLocation) {
@@ -106,6 +118,7 @@ export class MapService {
       this.oneMapService.getGeometryRoute(fromLocation, toLocation, modeOfTransport)
         .subscribe((routeGeometry: string) => {
           this.replacePolylineAt(routeGeometry, index - 1, 'red', 3, true);
+          this.spinnerService.mapIsChanging.next(false);
         })
 
     } else {
@@ -123,6 +136,7 @@ export class MapService {
       this.oneMapService.getGeometryRoute(newLocation, toLocation, modeOfTransport)
         .subscribe((routeGeometry: string) => {
           this.replacePolylineAt(routeGeometry, index, 'red', 3, true);
+          this.spinnerService.mapIsChanging.next(false);
         })
 
     }
@@ -204,6 +218,8 @@ export class MapService {
 
   deletePolylineAt(index, updatedLocations, modeOfTransport, polylineOptions): void {
 
+    this.spinnerService.mapIsChanging.next(true);
+
     let lastLocation = index === updatedLocations.length;
 
     if (lastLocation) {
@@ -216,8 +232,8 @@ export class MapService {
         this.deleteMapBoundsAt(index - 1, true);
       }
 
-
       this.polylineChanged.next(this.polylineLayer);
+      this.spinnerService.mapIsChanging.next(false);
 
     } else {
       //Middle location. It's always going to have a before and after index since the app doesn't allow users to delete Home Base
@@ -231,6 +247,7 @@ export class MapService {
           this.polylineLayer.splice(index - 1, 1);
           this.deleteMapBoundsAt(index - 1, true);
           this.polylineChanged.next(this.polylineLayer);
+          this.spinnerService.mapIsChanging.next(false);
         })
     }
   }
@@ -251,11 +268,13 @@ export class MapService {
   }
 
   recalculateRoute(locations: LocationObj[], modeOfTransport) {
+    this.spinnerService.mapIsChanging.next(true);
     let geometryRoutes: Observable<string[]> = this.oneMapService.getGeometryRoutes(locations, modeOfTransport);
     geometryRoutes.subscribe((routeGeometryArr: string[]) => {
       //Full replace of Polyline layer
       this.fullReplacePolyline(routeGeometryArr, 'red', 3);
       this.polylineChanged.next(this.polylineLayer);
+      this.spinnerService.mapIsChanging.next(false);
     });
   }
 

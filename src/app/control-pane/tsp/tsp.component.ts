@@ -93,8 +93,4 @@ export class TspComponent implements OnInit, OnDestroy {
     this.mapService.deleteMarkerAt(index);
   }
 
-  doSomething(status) {
-    this.spinnerService.mapIsChanging.next(status);
-  }
-
 }
