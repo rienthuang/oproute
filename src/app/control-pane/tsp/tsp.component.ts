@@ -83,6 +83,7 @@ export class TspComponent implements OnInit, OnDestroy {
 
   transitChanged() {
     this.tspService.setModeOfTransport(this.selectedTransitOption.value);
+    if (this.locationsSelected.length > 1) this.mapService.recalculateRoute(this.locationsSelected, this.selectedTransitOption.value);
   }
 
   deleteLocation(index: number) {

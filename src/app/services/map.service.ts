@@ -3,7 +3,8 @@ import { Injectable } from '@angular/core';
 import { Map, Marker, Icon, Polyline, LatLngBounds } from "leaflet";
 import { OneMapService } from './onemap.service';
 import { PolylineUtilService } from './polyline-util.service';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
+import { LocationObj } from '../models/location.model';
 
 @Injectable({ providedIn: 'root' })
 export class MapService {
@@ -62,6 +63,72 @@ export class MapService {
     return this.polylineLayer.slice();
   }
 
+  addNewLocationToMap(location: LocationObj, index: number, existingLocations: LocationObj[], modeOfTransport: string): void {
+    //Add Marker
+    this.addMarker(location, index);
+
+    //Add Polyline if it's not the only location
+    if (index === 0) return;
+    this.oneMapService.getGeometryRoute(existingLocations[index - 1], existingLocations[index], modeOfTransport)
+      .subscribe((routeGeometry: string) => {
+        this.addPolyline('red', 3, routeGeometry);
+      })
+  }
+
+  replaceLocationOnMap(newLocation: LocationObj, index: number, existingLocations: LocationObj[], modeOfTransport: string): void {
+    //Replace Marker
+    this.replaceMarkerAt(newLocation, index);
+
+
+    //Replace polyline
+    if (index === 0 && existingLocations.length === 1) return; //only location so far, no polyline to draw
+
+    let newStartLocation = index === 0;
+    let newLastLocation = index === existingLocations.length - 1;
+    let newMiddleLocation = (!newStartLocation && !newLastLocation);
+
+    let fromLocation;
+    let toLocation;
+
+    if (newStartLocation) {
+      fromLocation = newLocation;
+      toLocation = existingLocations[1]
+
+      this.oneMapService.getGeometryRoute(fromLocation, toLocation, modeOfTransport)
+        .subscribe((routeGeometry: string) => {
+          this.replacePolylineAt(routeGeometry, index, 'red', 3, true);
+        })
+
+    } else if (newLastLocation) {
+      fromLocation = existingLocations[index - 1];
+      toLocation = newLocation;
+
+      this.oneMapService.getGeometryRoute(fromLocation, toLocation, modeOfTransport)
+        .subscribe((routeGeometry: string) => {
+          this.replacePolylineAt(routeGeometry, index - 1, 'red', 3, true);
+        })
+
+    } else {
+      fromLocation = existingLocations[index - 1];
+      toLocation = existingLocations[index + 1];
+
+      //Perform 2 API calls to OneMap asynchronously
+      //From -> Middle
+      this.oneMapService.getGeometryRoute(fromLocation, newLocation, modeOfTransport)
+        .subscribe((routeGeometry: string) => {
+          this.replacePolylineAt(routeGeometry, index - 1, 'red', 3, false);
+        })
+
+      //Middle -> To
+      this.oneMapService.getGeometryRoute(newLocation, toLocation, modeOfTransport)
+        .subscribe((routeGeometry: string) => {
+          this.replacePolylineAt(routeGeometry, index, 'red', 3, true);
+        })
+
+    }
+
+  }
+
   addMarker(locationObj, index): void {
     let latitude = locationObj['LATITUDE'];
     let longitude = locationObj['LONGITUDE'];
@@ -89,7 +156,7 @@ export class MapService {
     let marker = new Marker([latitude, longitude], { icon: icon });
     this.markersLayer.splice(index, 1, marker);
 
-    if (index === 0) this.focusOnMarker(marker);
+    if (index === 0 && this.markersLayer.length === 1) this.focusOnMarker(marker);
 
     this.markersChanged.next(this.markersLayer.slice());
   }
@@ -104,97 +171,35 @@ export class MapService {
     this.map.fitBounds(markerBounds, { maxZoom: 14 });
   }
 
-  addPolyline(toLocationObj, index, existingLocations, modeOfTransport, polylineOptions): void {
-    if (index === 0) return;
-
-    let fromLocationObj = existingLocations[index - 1];
-
-    //Get Route Geometry through API Call to OneMap
-    this.oneMapService.getRoute(fromLocationObj, toLocationObj, modeOfTransport)
-      .subscribe((response) => {
-        let routeGeometry = response['route_geometry'];
-
-        let polyline = new Polyline(this.polylineUtilService.decode(routeGeometry, this.ENCODER_PRECISION), polylineOptions);
-        this.polylineLayer.push(polyline);
-        this.addMapBounds(polyline.getBounds());
-
-        this.polylineChanged.next(this.polylineLayer);
-
-      })
+  addPolyline(polylineColor: string, weight: number, routeGeometry: string) {
+    let polylineOptions = {
+      color: polylineColor,
+      weight: weight
+    }
+    let polyline = new Polyline(this.polylineUtilService.decode(routeGeometry, this.ENCODER_PRECISION), polylineOptions);
+    this.polylineLayer.push(polyline);
+    this.addMapBounds(polyline.getBounds());
+    this.polylineChanged.next(this.polylineLayer);
   }
 
-  replacePolylineAt(locationObj, index, existingLocations, modeOfTransport, polylineOptions): void {
-
-    //only location so far, no polyline to draw
-    if (index === 0 && existingLocations.length === 1) return;
-
-    let fromLocationObj;
-    let toLocationObj;
-
-    let startLocation = false;
-    let middleLocation = false;
-    let lastLocation = false;
-
-    if (index === 0) {
-      //first location
-      startLocation = true;
-      fromLocationObj = locationObj;
-      toLocationObj = existingLocations[1];
-
-    } else if (index === existingLocations.length - 1) {
-      //last location
-      lastLocation = true;
-      toLocationObj = locationObj;
-      fromLocationObj = existingLocations[index - 1];
-
-    } else {
-      //location in the middle
-      middleLocation = true;
-      fromLocationObj = existingLocations[index - 1];
-      toLocationObj = existingLocations[index + 1];
+  replacePolylineAt(newRouteGeometry, indexToReplace, polylineColor: string, weight: number, fitBounds: boolean) {
+    let polylineOptions = {
+      color: polylineColor,
+      weight: weight
     }
+    let newPolyline = new Polyline(this.polylineUtilService.decode(newRouteGeometry, this.ENCODER_PRECISION), polylineOptions);
+    this.polylineLayer.splice(indexToReplace, 1, newPolyline);
+    this.polylineChanged.next(this.polylineLayer)
 
-    if (!middleLocation) {
-      this.oneMapService.getRoute(fromLocationObj, toLocationObj, modeOfTransport)
-        .subscribe((response) => {
-          let routeGeometry = response['route_geometry'];
-          let polyline = new Polyline(this.polylineUtilService.decode(routeGeometry, this.ENCODER_PRECISION), polylineOptions);
+    this.replaceMapBounds(indexToReplace, newPolyline.getBounds(), fitBounds);
+  }
 
-          if (startLocation) {
-            this.polylineLayer.splice(index, 1, polyline);
-            this.replaceMapBounds(index, polyline.getBounds(), true);
-          } else {
-            this.polylineLayer.splice(index - 1, 1, polyline);
-            this.replaceMapBounds(index - 1, polyline.getBounds(), true);
-          }
-
-          this.polylineChanged.next(this.polylineLayer);
-
-        })
-    } else {
-      //Perform 2 API call to OneMap asynchronously
-      this.oneMapService.getRoute(fromLocationObj, locationObj, modeOfTransport)
-        .subscribe((response) => {
-          let routeGeometry = response['route_geometry'];
-          let polyline = new Polyline(this.polylineUtilService.decode(routeGeometry, this.ENCODER_PRECISION), polylineOptions);
-          this.polylineLayer.splice(index - 1, 1, polyline);
-          this.replaceMapBounds(index - 1, polyline.getBounds(), false);
-
-          this.polylineChanged.next(this.polylineLayer);
-
-        });
-      this.oneMapService.getRoute(locationObj, toLocationObj, modeOfTransport)
-        .subscribe((response) => {
-          let routeGeometry = response['route_geometry'];
-          let polyline = new Polyline(this.polylineUtilService.decode(routeGeometry, this.ENCODER_PRECISION), polylineOptions);
-          this.polylineLayer.splice(index, 1, polyline);
-          this.replaceMapBounds(index, polyline.getBounds(), true);
-
-          this.polylineChanged.next(this.polylineLayer);
-
-        })
-    }
-
+  fullReplacePolyline(geometryRoutes: string[], polylineColor: string, weight: number) {
+    this.polylineLayer = [];
+    this.mapBounds = [];
+    geometryRoutes.forEach(routeGeometry => {
+      this.addPolyline('red', 3, routeGeometry);
+    });
   }
 
   deletePolylineAt(index, updatedLocations, modeOfTransport, polylineOptions): void {
@@ -220,19 +225,12 @@ export class MapService {
       let fromLocationObj = updatedLocations[index - 1];
       let toLocationObj = updatedLocations[index];
 
-      this.oneMapService.getRoute(fromLocationObj, toLocationObj, modeOfTransport)
-        .subscribe((response) => {
-          let newRouteGeometry = response['route_geometry'];
-          let newPolyline = new Polyline(this.polylineUtilService.decode(newRouteGeometry, this.ENCODER_PRECISION), polylineOptions);
-
-          this.polylineLayer.splice(index, 1, newPolyline);
+      this.oneMapService.getGeometryRoute(fromLocationObj, toLocationObj, modeOfTransport)
+        .subscribe((routeGeometry: string) => {
+          this.replacePolylineAt(routeGeometry, index, 'red', 3, false);
           this.polylineLayer.splice(index - 1, 1);
-
-          this.replaceMapBounds(index, newPolyline.getBounds(), false);
           this.deleteMapBoundsAt(index - 1, true);
-
           this.polylineChanged.next(this.polylineLayer);
-
         })
     }
   }
@@ -250,6 +248,15 @@ export class MapService {
   deleteMapBoundsAt(index: number, fitBounds: boolean) {
     this.mapBounds.splice(index, 1);
     if (fitBounds) this.map.fitBounds(this.mapBounds);
+  }
+
+  recalculateRoute(locations: LocationObj[], modeOfTransport) {
+    let geometryRoutes: Observable<string[]> = this.oneMapService.getGeometryRoutes(locations, modeOfTransport);
+    geometryRoutes.subscribe((routeGeometryArr: string[]) => {
+      //Full replace of Polyline layer
+      this.fullReplacePolyline(routeGeometryArr, 'red', 3);
+      this.polylineChanged.next(this.polylineLayer);
+    });
   }
 
 }

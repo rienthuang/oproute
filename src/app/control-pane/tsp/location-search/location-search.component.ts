@@ -91,26 +91,22 @@ export class LocationSearchComponent implements OnInit {
       this.locationSelected = locationObj;
 
       this.tspService.addLocation(this.locationSelected);
-      this.mapService.addMarker(this.locationSelected, this.index);
-      this.mapService.addPolyline(
+      this.mapService.addNewLocationToMap(
         this.locationSelected,
         this.index,
         this.tspService.getLocationsSelected(),
-        this.tspService.getModeOfTransport(),
-        { color: 'red', weight: 5 }
+        this.tspService.getModeOfTransport()
       );
 
     } else {
       this.locationSelected = locationObj;
       this.tspService.replaceAt(this.locationSelected, this.index);
-      this.mapService.replaceMarkerAt(this.locationSelected, this.index);
-      this.mapService.replacePolylineAt(
+      this.mapService.replaceLocationOnMap(
         this.locationSelected,
         this.index,
         this.tspService.getLocationsSelected(),
-        this.tspService.getModeOfTransport(),
-        { color: 'red', weight: 5 }
-      );
+        this.tspService.getModeOfTransport()
+      )
     }
     this.optionSelected = true;
   }
