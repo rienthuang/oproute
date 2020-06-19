@@ -7,6 +7,10 @@
 
     <app-map></app-map>
 
+    <div class="map-spinner">
+      <mat-spinner *ngIf="showMapSpinner"></mat-spinner>
+    </div>
+
     <!-- Sidebar Toggle -->
     <div *ngIf="!controlPaneOpened" class="toggle-controlpane-container">
       <button class="toggle-controlpane-button" (click)="controlpane.open()"></button>

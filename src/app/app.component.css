@@ -33,3 +33,12 @@
   display: block;
   cursor: pointer;
 }
+
+.map-spinner {
+  position: absolute;
+  z-index: 1000;
+  left: 50%;
+  top: 40%;
+  margin-top: -50px;
+  margin-left: -50px;
+}

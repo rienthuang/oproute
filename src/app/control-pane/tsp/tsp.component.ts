@@ -8,6 +8,8 @@ import { MapService } from 'src/app/services/map.service';
 import { LocationObj } from 'src/app/models/location.model';
 import { Subscription } from 'rxjs';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { DatePipe } from '@angular/common';
+import { SpinnerService } from 'src/app/services/spinner.service';
 
 @Component({
   selector: 'app-tsp',
@@ -55,11 +57,10 @@ export class TspComponent implements OnInit, OnDestroy {
 
   @ViewChild('transitOption') selectedTransitOption;
 
-  constructor(private controlPanelService: ControlPanelService, private tspService: TspService, private mapService: MapService) { }
+  constructor(private controlPanelService: ControlPanelService, private tspService: TspService, private mapService: MapService, private spinnerService: SpinnerService) { }
 
   ngOnInit(): void {
     console.log('tspcomponent init');
-
 
     this.locationsSelected = this.tspService.getLocationsSelected();
     this.MAX_LOCATIONS = this.tspService.getMaxLocations();
@@ -91,4 +92,9 @@ export class TspComponent implements OnInit, OnDestroy {
     this.mapService.deletePolylineAt(index, this.tspService.getLocationsSelected(), this.selectedTransitOption.value, { color: 'red', weight: 5 })
     this.mapService.deleteMarkerAt(index);
   }
+
+  doSomething(status) {
+    this.spinnerService.mapIsChanging.next(status);
+  }
+
 }
