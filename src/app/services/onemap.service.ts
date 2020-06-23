@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { map } from "rxjs/operators";
 import { DatePipe } from '@angular/common';
 import { LocationObj } from '../models/location.model';
-import { Observable, from, forkJoin } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class OneMapService {

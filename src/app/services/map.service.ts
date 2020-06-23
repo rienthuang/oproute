@@ -273,6 +273,8 @@ export class MapService {
     geometryRoutes.subscribe((routeGeometryArr: string[]) => {
       //Full replace of Polyline layer
       this.fullReplacePolyline(routeGeometryArr, 'red', 3);
+
+      //Map View Change
       this.polylineChanged.next(this.polylineLayer);
       this.spinnerService.mapIsChanging.next(false);
     });
