@@ -15,7 +15,6 @@ import { SpinnerService } from 'src/app/services/spinner.service';
   selector: 'app-tsp',
   templateUrl: './tsp.component.html',
   styleUrls: ['./tsp.component.css'],
-  providers: [TspService],
   // animations: [
   //   trigger('divFlyAnimation', [
   //     state('in', style({

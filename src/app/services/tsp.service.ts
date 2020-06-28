@@ -1,7 +1,9 @@
 import { Subject } from 'rxjs';
 import { MapService } from './map.service';
 import { LocationObj } from "src/app/models/location.model";
+import { Injectable } from '@angular/core';
 
+@Injectable({ providedIn: 'root' })
 export class TspService {
 
   private locationsSelected: LocationObj[] = [];

@@ -16,6 +16,7 @@ import { MaterialModule } from './material/material.module';
 import { ControlPaneComponent } from './control-pane/control-pane.component';
 import { TspComponent } from './control-pane/tsp/tsp.component';
 import { LocationSearchComponent } from './control-pane/tsp/location-search/location-search.component';
+import { TspResultComponent } from './control-pane/tsp-result/tsp-result.component';
 
 @NgModule({
   declarations: [
@@ -25,6 +26,7 @@ import { LocationSearchComponent } from './control-pane/tsp/location-search/loca
     ControlPaneComponent,
     TspComponent,
     LocationSearchComponent,
+    TspResultComponent,
   ],
   imports: [
     BrowserModule,

@@ -69,11 +69,12 @@
 }
 
 .calculate-route-button > .mat-raised-button {
-  background-color: #b7edd3;
+  background-color: #0677da;
+  font-size: 12pt;
   border-radius: 15px;
-  color: #52514e;
+  color: #ffffff;
 }
 
 .calculate-route-button > .mat-raised-button:hover {
-  background-color: #99c9b2;
+  background-color: #074c8a;
 }
