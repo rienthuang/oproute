@@ -5,17 +5,16 @@
     Optimize Your Route!
     <fa-icon (click)="closeControlPanel()" class="close-pane" [icon]="faCaretLeft"></fa-icon>
   </div>
-
   <!-- Transit Options -->
   <div class="transit-options-container">
     <mat-button-toggle-group
       #transitOption="matButtonToggleGroup"
-      value='drive'
+      [value]="currentTransitOption"
       (change)="transitChanged()"
       aria-label="Transit Options">
 
       <mat-button-toggle value="drive"
-        [class.active]="transitOption.value==='drive'"
+        [class.active]="currentTransitOption==='drive'"
         disableRipple="true"
         aria-label="drive">
         <fa-icon [icon]="faCar" size="lg"></fa-icon>
@@ -30,7 +29,7 @@
       </mat-button-toggle> -->
 
       <mat-button-toggle value="walk"
-        [class.active]="transitOption.value==='walk'"
+        [class.active]="currentTransitOption==='walk'"
         disableRipple="true"
         aria-label="walk">
         <fa-icon [icon]="faWalking" size="lg"></fa-icon>
@@ -85,9 +84,10 @@
   </ng-container>
 
   <!-- Calculate Button -->
-  <div *ngIf="locationsSelected.length>=3" class="calculate-route-button">
-    <button mat-raised-button style="padding-top: 8px;">
-      <fa-icon [icon]="faRoute" size="3x"></fa-icon>
+  <div *ngIf="locationsSelected.length>=0" class="calculate-route-button">
+    <button mat-raised-button>
+      Optimize!
+      <!-- <fa-icon [icon]="faRoute" size="3x"></fa-icon> -->
     </button>
   </div>
 </div>

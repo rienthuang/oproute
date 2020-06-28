@@ -56,6 +56,8 @@ export class TspComponent implements OnInit, OnDestroy {
   locationsChangedSubscription: Subscription;
 
   @ViewChild('transitOption') selectedTransitOption;
+  currentTransitOption;
+
 
   constructor(private controlPanelService: ControlPanelService, private tspService: TspService, private mapService: MapService, private spinnerService: SpinnerService) { }
 
@@ -64,8 +66,9 @@ export class TspComponent implements OnInit, OnDestroy {
 
     this.locationsSelected = this.tspService.getLocationsSelected();
     this.MAX_LOCATIONS = this.tspService.getMaxLocations();
+    this.currentTransitOption = this.tspService.getModeOfTransport();
 
-    this.tspService.locationsSelectedChanged.subscribe((updatedLocationsSelected: LocationObj[]) => {
+    this.locationsChangedSubscription = this.tspService.locationsSelectedChanged.subscribe((updatedLocationsSelected: LocationObj[]) => {
 
       console.log('locations changed captured');
       console.log(updatedLocationsSelected);
@@ -84,6 +87,7 @@ export class TspComponent implements OnInit, OnDestroy {
 
   transitChanged() {
     this.tspService.setModeOfTransport(this.selectedTransitOption.value);
+    this.currentTransitOption = this.selectedTransitOption.value;
     if (this.locationsSelected.length > 1) this.mapService.recalculateRoute(this.locationsSelected, this.selectedTransitOption.value);
   }
 
