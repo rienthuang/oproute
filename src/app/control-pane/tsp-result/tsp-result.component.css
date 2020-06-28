@@ -1,0 +1,111 @@
+.result-list-container {
+  width: 100%;
+  top: 0;
+  height: 100%;
+}
+
+.mat-headline {
+  margin: 0px;
+}
+
+.pane-title {
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  color: white;
+  background-color: #0074d9;
+}
+
+.close-pane {
+  position: absolute;
+  height: 40px;
+  top: 1px;
+  right: 10px;
+  font-size: 16pt;
+  line-height: 40px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.result-list {
+  width: 97%;
+  border: solid 1px #ccc;
+  display: block;
+  background: white;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-left: 5px;
+}
+
+.list-box {
+  padding: 10px;
+  border-bottom: solid 1px #ccc;
+  color: rgba(0, 0, 0, 0.87);
+  align-items: center;
+  box-sizing: border-box;
+  cursor: grab;
+  background: white;
+  font-size: 15px;
+}
+
+.inline-icon {
+  display: inline-block;
+  height: 30x;
+  width: 30px;
+  padding-top: 5px;
+}
+
+.mat-icon {
+  font-size: 21px;
+}
+
+.inline-text {
+  display: inline-block;
+  width: 290px;
+}
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.result-list.cdk-drop-list-dragging .list-box:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.recalculate-button {
+  width: 100%;
+  padding-top: 15px;
+  text-align: center;
+}
+
+.recalculate-button > .mat-raised-button {
+  background-color: #0677da;
+  font-size: 12pt;
+  border-radius: 15px;
+  color: #ffffff;
+}
+
+.recalculate-button > .mat-raised-button:hover {
+  background-color: #074c8a;
+}
+
+.google-maps-button {
+  width: 100%;
+  padding-top: 15px;
+  text-align: center;
+}
+
+.google-maps-button > .mat-raised-button {
+  background-color: #2cd145;
+  font-size: 12pt;
+  border-radius: 15px;
+  color: #fcfcfc;
+}
+
+.google-maps-button > .mat-raised-button:hover {
+  background-color: #1c8a2c;
+}
