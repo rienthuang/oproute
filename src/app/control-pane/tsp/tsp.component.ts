@@ -57,6 +57,7 @@ export class TspComponent implements OnInit, OnDestroy {
   @ViewChild('transitOption') selectedTransitOption;
   currentTransitOption;
 
+  optimizeSpinner = false;
 
   constructor(private controlPanelService: ControlPanelService, private tspService: TspService, private mapService: MapService, private spinnerService: SpinnerService, private serverService: ServerService) { }
 
@@ -97,6 +98,7 @@ export class TspComponent implements OnInit, OnDestroy {
   }
 
   solveTsp() {
+    this.optimizeSpinner = true;
     this.serverService.solveTsp(this.locationsSelected)
       .subscribe((response: number[]) => {
         let optimizedLocations = [];
@@ -105,7 +107,9 @@ export class TspComponent implements OnInit, OnDestroy {
         });
         console.log(optimizedLocations);
         this.tspService.setOptimizedLocations(optimizedLocations);
+        this.mapService.resetAndBuildOptimizedMap(optimizedLocations, this.selectedTransitOption.value);
         this.controlPanelService.setActiveTab('directions');
+        this.optimizeSpinner = false;
       })
   }
 
