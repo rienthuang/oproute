@@ -1,5 +1,4 @@
 import { Subject } from 'rxjs';
-import { MapService } from './map.service';
 import { LocationObj } from "src/app/models/location.model";
 import { Injectable } from '@angular/core';
 
@@ -8,7 +7,9 @@ export class TspService {
 
   private locationsSelected: LocationObj[] = [];
   private optimizedLocations: LocationObj[] = [];
-  private MAX_LOCATIONS = 6;
+  private customRoute: LocationObj[] = [];
+
+  private MAX_LOCATIONS = 9;
   private modeOfTransport = 'drive'
 
   public locationsSelectedChanged = new Subject<LocationObj[]>();
@@ -61,6 +62,14 @@ export class TspService {
 
   setOptimizedLocations(locations: LocationObj[]): void {
     this.optimizedLocations = locations.slice();
+  }
+
+  getCustomRoute(): LocationObj[] {
+    return this.customRoute.slice();
+  }
+
+  setCustomRoute(newCustomRoute: LocationObj[]): void {
+    this.customRoute = newCustomRoute;
   }
 
 }

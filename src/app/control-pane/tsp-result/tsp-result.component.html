@@ -7,7 +7,7 @@
   </div>
 
   <!-- Result List -->
-  <div class="result-list" cdkDropList>
+  <div class="result-list" cdkDropList (cdkDropListDropped)="onDrop($event)">
     <div class="list-box" *ngFor="let location of optimizedLocations; let i = index" cdkDrag>
 
       <!-- Inline Icon -->
@@ -26,9 +26,9 @@
 
   <!-- Buttons -->
 
-  <div class="recalculate-button">
-    <button mat-raised-button>
-      Recalculate Route
+  <div *ngIf="listDirty" class="recalculate-button">
+    <button (click)="getOptimalRoute()" mat-raised-button>
+      Reset to Optimal Route
     </button>
   </div>
 

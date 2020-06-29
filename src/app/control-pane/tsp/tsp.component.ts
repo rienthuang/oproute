@@ -69,10 +69,6 @@ export class TspComponent implements OnInit, OnDestroy {
     this.currentTransitOption = this.tspService.getModeOfTransport();
 
     this.locationsChangedSubscription = this.tspService.locationsSelectedChanged.subscribe((updatedLocationsSelected: LocationObj[]) => {
-
-      console.log('locations changed captured');
-      console.log(updatedLocationsSelected);
-
       this.locationsSelected = updatedLocationsSelected;
     })
   }
@@ -99,6 +95,8 @@ export class TspComponent implements OnInit, OnDestroy {
 
   solveTsp() {
     this.optimizeSpinner = true;
+    this.tspService.setCustomRoute([]);
+
     this.serverService.solveTsp(this.locationsSelected)
       .subscribe((response: number[]) => {
         let optimizedLocations = [];

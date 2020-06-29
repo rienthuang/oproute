@@ -86,7 +86,7 @@ export class MapService {
     }
     this.oneMapService.getGeometryRoute(existingLocations[index - 1], existingLocations[index], modeOfTransport)
       .subscribe((routeGeometry: string) => {
-        this.addPolyline('red', 3, routeGeometry, 'default');
+        this.addPolyline('red', 3, routeGeometry, 'default', true);
         this.spinnerService.mapIsChanging.next(false);
       })
   }
@@ -220,7 +220,7 @@ export class MapService {
     this.map.fitBounds(markerBounds, { maxZoom: 14 });
   }
 
-  addPolyline(polylineColor: string, weight: number, routeGeometry: string, layer: string) {
+  addPolyline(polylineColor: string, weight: number, routeGeometry: string, layer: string, fitToMap: boolean) {
     let polylineOptions = {
       color: polylineColor,
       weight: weight
@@ -229,11 +229,11 @@ export class MapService {
 
     if (layer === 'default') {
       this.polylineLayer.push(polyline);
-      this.addMapBounds(polyline.getBounds(), layer);
+      this.addMapBounds(polyline.getBounds(), layer, fitToMap);
       this.polylineChanged.next(this.polylineLayer);
     } else if (layer === 'optimized') {
       this.optimizedPolylineLayer.push(polyline);
-      this.addMapBounds(polyline.getBounds(), layer);
+      this.addMapBounds(polyline.getBounds(), layer, fitToMap);
     }
   }
 
@@ -252,9 +252,10 @@ export class MapService {
   fullReplacePolyline(geometryRoutes: string[], polylineColor: string, weight: number) {
     this.polylineLayer = [];
     this.mapBounds = [];
-    geometryRoutes.forEach(routeGeometry => {
-      this.addPolyline(polylineColor, weight, routeGeometry, 'default');
-    });
+    for (let i = 0; i < geometryRoutes.length; i++) {
+      let fitToMap = i === geometryRoutes.length - 1;
+      this.addPolyline(polylineColor, weight, geometryRoutes[i], 'default', fitToMap);
+    }
   }
 
   deletePolylineAt(index, updatedLocations, modeOfTransport, polylineOptions): void {
@@ -293,13 +294,13 @@ export class MapService {
     }
   }
 
-  addMapBounds(bounds: LatLngBounds, layer: string) {
+  addMapBounds(bounds: LatLngBounds, layer: string, fit: boolean) {
     if (layer === 'default') {
       this.mapBounds.push(bounds);
-      this.map.fitBounds(this.mapBounds);
+      if (fit) this.map.fitBounds(this.mapBounds);
     } else if (layer === 'optimized') {
       this.optimizedMapBounds.push(bounds);
-      this.map.fitBounds(this.optimizedMapBounds);
+      if (fit) this.map.fitBounds(this.optimizedMapBounds);
     }
   }
 
@@ -339,9 +340,11 @@ export class MapService {
     //Build polylines
     let geometryRoutes: Observable<string[]> = this.oneMapService.getGeometryRoutes(orderedLocations, modeOfTransport);
     geometryRoutes.subscribe((routeGeometryArr: string[]) => {
-      routeGeometryArr.forEach(routeGeometry => {
-        this.addPolyline('#08a800', 4, routeGeometry, 'optimized')
-      })
+
+      for (let i = 0; i < routeGeometryArr.length; i++) {
+        let fitToMap = i === routeGeometryArr.length - 1;
+        this.addPolyline('#08a800', 4, routeGeometryArr[i], 'optimized', fitToMap)
+      }
 
       //Emit
       this.optimizedLayerBuilt.next({ polylines: this.optimizedPolylineLayer, markers: this.optimizedMarkersLayer })

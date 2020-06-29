@@ -22,12 +22,7 @@ export class ServerService {
       let long = +location.LONGITUDE;
       transformedLocations.push(new Coord(name, lat, long));
     });
-
-    console.log(transformedLocations);
-
     let url = this.serverUrl + '/solve/tsp';
-
     return this.http.post(url, transformedLocations);
   }
-
 }

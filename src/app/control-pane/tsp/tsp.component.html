@@ -61,7 +61,7 @@
       <!-- Icon -->
       <div style="display: inline-block; height: 30x; width: 30px;">
         <!-- Conditions to determine which icon to display -->
-        <mat-icon *ngIf="i+2 < 10; else endIcon">filter_{{i+2}}</mat-icon>
+        <mat-icon *ngIf="i+2 < MAX_LOCATIONS; else endIcon">filter_{{i+2}}</mat-icon>
 
         <ng-template #endIcon>
           <fa-icon [icon]="faFlagCheckered" size="lg"></fa-icon>
@@ -84,7 +84,7 @@
   </ng-container>
 
   <!-- Calculate Button -->
-  <div *ngIf="locationsSelected.length>=0" class="calculate-route-button">
+  <div *ngIf="locationsSelected.length>=3" class="calculate-route-button">
     <button *ngIf="!optimizeSpinner" (click)="solveTsp()" mat-raised-button>
       Optimize!
       <!-- <fa-icon [icon]="faRoute" size="3x"></fa-icon> -->
