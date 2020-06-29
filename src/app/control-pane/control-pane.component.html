@@ -5,11 +5,9 @@
       <li (click)="onTabClick('home')" [class.active]="activeTab==='home'">
         <fa-icon [icon]="faBars" [styles]="isActiveIcon('home')"></fa-icon> <!-- if active style white-->
       </li>
-      <li (click)="onTabClick('directions')" [class.active]="activeTab==='directions'">
+      <li (click)="onTabClick('directions')" [class.active]="activeTab==='directions'"
+        [class.disabled]="directionsDisabled">
         <fa-icon [icon]="faDirections" [styles]="isActiveIcon('directions')"></fa-icon>
-      </li>
-      <li (click)="onTabClick('map')" [class.active]="activeTab==='map'">
-        <fa-icon [icon]="faMap" [styles]="isActiveIcon('map')"></fa-icon>
       </li>
     </ul>
 

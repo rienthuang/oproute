@@ -47,6 +47,13 @@
   background-color: #0074d9;
 }
 
+.pane-tabs > ul > li.disabled {
+  background-color: #b3b3b3;
+}
+.pane-tabs > ul > li.disabled:hover {
+  cursor: default;
+}
+
 .pane-content-container {
   position: absolute;
   overflow-x: hidden;

@@ -22,6 +22,7 @@ export class ControlPaneComponent implements OnInit {
   faInfoCircle = faInfoCircle;
 
   activeTab;
+  directionsDisabled = true;
 
   tabListenerSubscription: Subscription;
 
@@ -31,6 +32,7 @@ export class ControlPaneComponent implements OnInit {
     this.activeTab = this.controlPanelService.getActiveTab();
     this.tabListenerSubscription = this.controlPanelService.tabChanged.subscribe(newActiveTab => {
       this.activeTab = newActiveTab;
+      if (newActiveTab === 'directions') this.directionsDisabled = false;
     })
   }
 
@@ -39,6 +41,7 @@ export class ControlPaneComponent implements OnInit {
   }
 
   onTabClick(tabClicked: string) {
+    if (tabClicked === 'directions' && this.directionsDisabled) return;
     this.controlPanelService.setActiveTab(tabClicked);
   }
 

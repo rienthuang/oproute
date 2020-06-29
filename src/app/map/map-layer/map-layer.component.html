@@ -1,4 +1,8 @@
 <div *ngIf="showLandLayer" [leafletLayer]="landTile"></div>
 <div *ngIf="showNightLayer" [leafletLayer]="nightTile"></div>
-<div [leafletLayers]="markersLayer"></div>
-<div [leafletLayers]="polylineLayer"></div>
+
+<div *ngIf="activeTab==='home'" [leafletLayers]="markersLayer"></div>
+<div *ngIf="activeTab==='home'" [leafletLayers]="polylineLayer"></div>
+
+<div *ngIf="activeTab==='directions'" [leafletLayers]="optimizedMakerLayer"></div>
+<div *ngIf="activeTab==='directions'" [leafletLayers]="optimizedPolylineLayer"></div>
