@@ -11,6 +11,8 @@ import { SpinnerService } from './spinner.service';
 export class MapService {
   private map: Map;
 
+  numberedIconsUrl = 'assets/img/numbered_markers/'
+
   flagIcon: Icon = new Icon({
     iconUrl: 'assets/img/flag2.png',
     iconSize: [45, 61],
@@ -43,8 +45,14 @@ export class MapService {
   private polylineLayer: Polyline[] = [];
   private mapBounds = [];
 
+  private optimizedMarkersLayer: Marker[] = [];
+  private optimizedPolylineLayer: Polyline[] = [];
+  private optimizedMapBounds = [];
+
   public markersChanged = new Subject<Marker[]>();
   public polylineChanged = new Subject<Polyline[]>();
+
+  public optimizedLayerBuilt = new Subject<{ polylines: Polyline[], markers: Marker[] }>();
 
   constructor(private oneMapService: OneMapService, private polylineUtilService: PolylineUtilService, private spinnerService: SpinnerService) { }
 
@@ -69,7 +77,7 @@ export class MapService {
     this.spinnerService.mapIsChanging.next(true);
 
     //Add Marker
-    this.addMarker(location, index);
+    this.addMarker(location, index, 'default');
 
     //Add Polyline if it's not the only location
     if (index === 0) {
@@ -78,7 +86,7 @@ export class MapService {
     }
     this.oneMapService.getGeometryRoute(existingLocations[index - 1], existingLocations[index], modeOfTransport)
       .subscribe((routeGeometry: string) => {
-        this.addPolyline('red', 3, routeGeometry);
+        this.addPolyline('red', 3, routeGeometry, 'default');
         this.spinnerService.mapIsChanging.next(false);
       })
   }
@@ -143,7 +151,7 @@ export class MapService {
 
   }
 
-  addMarker(locationObj, index): void {
+  addMarker(locationObj: LocationObj, index: number, layer: string): void {
     let latitude = locationObj['LATITUDE'];
     let longitude = locationObj['LONGITUDE'];
 
@@ -151,12 +159,39 @@ export class MapService {
 
     index === 0 ? icon = this.homeIcon : icon = this.redIcon
 
-    let marker = new Marker([latitude, longitude], { icon: icon });
-    this.markersLayer.push(marker);
+    let marker = new Marker([+latitude, +longitude], { icon: icon });
+    if (layer === 'default') {
+      this.markersLayer.push(marker);
+      if (index === 0) this.focusOnMarker(marker);
+      this.markersChanged.next(this.markersLayer.slice());
+    } else if (layer === 'optimized') {
+      this.optimizedMarkersLayer.push(marker);
+    }
+  }
 
-    if (index === 0) this.focusOnMarker(marker);
+  addNumberedMarkers(locations: LocationObj[], layer: string): void {
+    for (let i = 0; i < locations.length; i++) {
+      let latitude = locations[i]['LATITUDE'];
+      let longitude = locations[i]['LONGITUDE'];
+      let icon;
 
-    this.markersChanged.next(this.markersLayer.slice());
+      if (i === locations.length - 1) continue;
+
+      i === 0
+        ? icon = this.homeIcon
+        : icon = new Icon({
+          iconUrl: this.numberedIconsUrl + 'marker' + (i + 1) + '.png',
+          shadowUrl: 'assets/img/marker-shadow.png',
+          iconSize: [28, 41],
+          iconAnchor: [12, 41],
+          popupAnchor: [1, -34],
+          shadowSize: [41, 41]
+        });
+
+      let marker = new Marker([+latitude, +longitude], { icon: icon });
+      if (layer === 'optimized') this.optimizedMarkersLayer.push(marker);
+
+    }
   }
 
   replaceMarkerAt(locationObj, index): void {
@@ -185,15 +220,21 @@ export class MapService {
     this.map.fitBounds(markerBounds, { maxZoom: 14 });
   }
 
-  addPolyline(polylineColor: string, weight: number, routeGeometry: string) {
+  addPolyline(polylineColor: string, weight: number, routeGeometry: string, layer: string) {
     let polylineOptions = {
       color: polylineColor,
       weight: weight
     }
     let polyline = new Polyline(this.polylineUtilService.decode(routeGeometry, this.ENCODER_PRECISION), polylineOptions);
-    this.polylineLayer.push(polyline);
-    this.addMapBounds(polyline.getBounds());
-    this.polylineChanged.next(this.polylineLayer);
+
+    if (layer === 'default') {
+      this.polylineLayer.push(polyline);
+      this.addMapBounds(polyline.getBounds(), layer);
+      this.polylineChanged.next(this.polylineLayer);
+    } else if (layer === 'optimized') {
+      this.optimizedPolylineLayer.push(polyline);
+      this.addMapBounds(polyline.getBounds(), layer);
+    }
   }
 
   replacePolylineAt(newRouteGeometry, indexToReplace, polylineColor: string, weight: number, fitBounds: boolean) {
@@ -212,7 +253,7 @@ export class MapService {
     this.polylineLayer = [];
     this.mapBounds = [];
     geometryRoutes.forEach(routeGeometry => {
-      this.addPolyline('red', 3, routeGeometry);
+      this.addPolyline(polylineColor, weight, routeGeometry, 'default');
     });
   }
 
@@ -252,9 +293,14 @@ export class MapService {
     }
   }
 
-  addMapBounds(bounds: LatLngBounds) {
-    this.mapBounds.push(bounds);
-    this.map.fitBounds(this.mapBounds);
+  addMapBounds(bounds: LatLngBounds, layer: string) {
+    if (layer === 'default') {
+      this.mapBounds.push(bounds);
+      this.map.fitBounds(this.mapBounds);
+    } else if (layer === 'optimized') {
+      this.optimizedMapBounds.push(bounds);
+      this.map.fitBounds(this.optimizedMapBounds);
+    }
   }
 
   replaceMapBounds(index: number, bounds: LatLngBounds, fitBounds: boolean) {
@@ -280,10 +326,28 @@ export class MapService {
     });
   }
 
-  buildOptimizedMap(locations: LocationObj[], modeOfTransport) {
+  resetAndBuildOptimizedMap(orderedLocations: LocationObj[], modeOfTransport) {
+    this.spinnerService.mapIsChanging.next(true);
 
+    this.optimizedMarkersLayer = [];
+    this.optimizedPolylineLayer = [];
+    this.optimizedMapBounds = [];
+
+    //Add Markers
+    this.addNumberedMarkers(orderedLocations, 'optimized')
+
+    //Build polylines
+    let geometryRoutes: Observable<string[]> = this.oneMapService.getGeometryRoutes(orderedLocations, modeOfTransport);
+    geometryRoutes.subscribe((routeGeometryArr: string[]) => {
+      routeGeometryArr.forEach(routeGeometry => {
+        this.addPolyline('#08a800', 4, routeGeometry, 'optimized')
+      })
+
+      //Emit
+      this.optimizedLayerBuilt.next({ polylines: this.optimizedPolylineLayer, markers: this.optimizedMarkersLayer })
+      this.spinnerService.mapIsChanging.next(false);
+    });
   }
-
 }
 
 
