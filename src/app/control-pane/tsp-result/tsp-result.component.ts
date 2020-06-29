@@ -23,6 +23,7 @@ export class TspResultComponent implements OnInit {
   optimizedLocations: LocationObj[] = [];
   listDirty = false;
   recalculateSpinner = false;
+  googleUrl = 'https://www.google.com/maps/dir/';
 
   optLocationSubsription: Subscription;
 
@@ -35,6 +36,7 @@ export class TspResultComponent implements OnInit {
     } else {
       this.optimizedLocations = this.tspService.getOptimizedLocations();
     }
+    console.log(this.optimizedLocations);
   }
 
   closeControlPanel() {
@@ -54,5 +56,20 @@ export class TspResultComponent implements OnInit {
     this.optimizedLocations = this.tspService.getOptimizedLocations();
     this.mapService.resetAndBuildOptimizedMap(this.optimizedLocations, this.tspService.getModeOfTransport());
     this.listDirty = false;
+  }
+
+  redirectToGoogleMap() {
+    let redirectToGoogle = this.googleUrl;
+    this.optimizedLocations.forEach(location => {
+
+      if (location.BUILDING !== 'NIL' && location.BUILDING !== location.ADDRESS) {
+        redirectToGoogle += location.BUILDING + '+' + location.ADDRESS + '/'
+      } else if (location.BUILDING === 'NIL') {
+        redirectToGoogle += location.ADDRESS + '/'
+      } else {
+        redirectToGoogle += location.LATITUDE + ',' + location.LONGITUDE + '/'
+      }
+    });
+    window.open(redirectToGoogle, "_blank");
   }
 }
