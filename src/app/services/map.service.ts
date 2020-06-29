@@ -280,6 +280,10 @@ export class MapService {
     });
   }
 
+  buildOptimizedMap(locations: LocationObj[], modeOfTransport) {
+
+  }
+
 }
 
 

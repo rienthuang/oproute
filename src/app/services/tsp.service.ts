@@ -7,18 +7,18 @@ import { Injectable } from '@angular/core';
 export class TspService {
 
   private locationsSelected: LocationObj[] = [];
+  private optimizedLocations: LocationObj[] = [];
   private MAX_LOCATIONS = 6;
   private modeOfTransport = 'drive'
 
   public locationsSelectedChanged = new Subject<LocationObj[]>();
   public locationDeleted = new Subject<number>();
 
-
   getLocationsSelected(): LocationObj[] {
     return this.locationsSelected.slice();
   }
 
-  setLocationsSelected(newLocationsSelected: LocationObj[]) {
+  setLocationsSelected(newLocationsSelected: LocationObj[]): void {
     this.locationsSelected = newLocationsSelected.slice();
     this.locationsSelectedChanged.next(this.locationsSelected.slice());
   }
@@ -53,8 +53,14 @@ export class TspService {
 
   setModeOfTransport(type: string): void {
     this.modeOfTransport = type;
+  }
 
-    //TODO: Recalculate Routing if any is already done
+  getOptimizedLocations(): LocationObj[] {
+    return this.optimizedLocations.slice();
+  }
+
+  setOptimizedLocations(locations: LocationObj[]): void {
+    this.optimizedLocations = locations.slice();
   }
 
 }

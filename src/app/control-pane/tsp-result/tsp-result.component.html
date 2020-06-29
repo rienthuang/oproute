@@ -8,18 +8,18 @@
 
   <!-- Result List -->
   <div class="result-list" cdkDropList>
-    <div class="list-box" *ngFor="let movie of movies; let i = index" cdkDrag>
+    <div class="list-box" *ngFor="let location of optimizedLocations; let i = index" cdkDrag>
 
       <!-- Inline Icon -->
       <div class="inline-icon">
         <fa-icon *ngIf="i === 0" [icon]="faHome" size="lg"></fa-icon>
-        <mat-icon *ngIf="i > 0 && i < movies.length-1">filter_{{i+1}}</mat-icon>
-        <fa-icon *ngIf="i === movies.length-1" [icon]="faFlagCheckered" size="lg"></fa-icon>
+        <mat-icon *ngIf="i > 0 && i < optimizedLocations.length-1">filter_{{i+1}}</mat-icon>
+        <fa-icon *ngIf="i === optimizedLocations.length-1" [icon]="faFlagCheckered" size="lg"></fa-icon>
       </div>
 
       <!-- Inline Text -->
       <div class="inline-text">
-        {{movie}}
+        {{location.SEARCHVAL}}
       </div>
     </div>
   </div>

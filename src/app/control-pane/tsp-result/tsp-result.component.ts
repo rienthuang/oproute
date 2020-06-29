@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { faCaretLeft, faHome, faFlagCheckered } from "@fortawesome/free-solid-svg-icons";
 import { ControlPanelService } from 'src/app/services/control-panel.service';
 import { TspService } from 'src/app/services/tsp.service';
+import { Subscription } from 'rxjs';
+import { LocationObj } from 'src/app/models/location.model';
 
 @Component({
   selector: 'app-tsp-result',
@@ -14,22 +16,15 @@ export class TspResultComponent implements OnInit {
   faHome = faHome;
   faFlagCheckered = faFlagCheckered;
 
-  movies = [
-    'Episode I - The Phantom Menace',
-    'Episode II - Attack of the Clones',
-    'Episode III - Revenge of the Sith',
-    'Episode IV - A New Hope',
-    'Episode V - The Empire Strikes Back',
-    'Episode VI - Return of the Jedi',
-    'Episode VII - The Force Awakens',
-    'Episode VIII - The Last Jedi',
-    'Episode IX – The Rise of Skywalker'
-  ];
+  optimizedLocations: LocationObj[] = [];
 
+  optLocationSubsription: Subscription;
 
-  constructor(private controlPanelService: ControlPanelService) { }
+  constructor(private controlPanelService: ControlPanelService, private tspService: TspService) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.optimizedLocations = this.tspService.getOptimizedLocations();
+  }
 
   closeControlPanel() {
     this.controlPanelService.closeControlPanel();

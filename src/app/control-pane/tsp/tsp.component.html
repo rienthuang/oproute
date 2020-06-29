@@ -85,7 +85,7 @@
 
   <!-- Calculate Button -->
   <div *ngIf="locationsSelected.length>=0" class="calculate-route-button">
-    <button mat-raised-button>
+    <button (click)="solveTsp()" mat-raised-button>
       Optimize!
       <!-- <fa-icon [icon]="faRoute" size="3x"></fa-icon> -->
     </button>

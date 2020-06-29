@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
+import { Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ControlPanelService {
@@ -7,9 +8,11 @@ export class ControlPanelService {
   private activeTab = 'home';
   private controlPanel: MatSidenav;
 
+  public tabChanged = new Subject<string>();
+
   setActiveTab(newActiveTab: string) {
     this.activeTab = newActiveTab;
-    return this.activeTab;
+    this.tabChanged.next(this.activeTab);
   }
 
   getActiveTab() {
