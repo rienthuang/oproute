@@ -54,7 +54,11 @@ export class MapService {
 
   public optimizedLayerBuilt = new Subject<{ polylines: Polyline[], markers: Marker[] }>();
 
-  constructor(private oneMapService: OneMapService, private polylineUtilService: PolylineUtilService, private spinnerService: SpinnerService) { }
+  constructor(
+    private oneMapService: OneMapService,
+    private polylineUtilService: PolylineUtilService,
+    private spinnerService: SpinnerService
+  ) { }
 
   initializeMap(map: Map) {
     this.map = map;

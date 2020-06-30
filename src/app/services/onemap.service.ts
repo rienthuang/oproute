@@ -1,18 +1,22 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { map } from "rxjs/operators";
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
+
+import { map, catchError } from "rxjs/operators";
 import { LocationObj } from '../models/location.model';
-import { Observable, forkJoin } from 'rxjs';
+import { Observable, forkJoin, throwError } from 'rxjs';
+import { SpinnerService } from './spinner.service';
+import * as alertify from 'alertifyjs';
+
 
 @Injectable({ providedIn: 'root' })
 export class OneMapService {
 
-  constructor(private http: HttpClient) { }
-
   private baseUrl = 'https://developers.onemap.sg';
   private token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjQ5NTcsInVzZXJfaWQiOjQ5NTcsImVtYWlsIjoiaHVhbmdibHVleW95b0BnbWFpbC5jb20iLCJmb3JldmVyIjpmYWxzZSwiaXNzIjoiaHR0cDpcL1wvb20yLmRmZS5vbmVtYXAuc2dcL2FwaVwvdjJcL3VzZXJcL3Nlc3Npb24iLCJpYXQiOjE1OTMzMjg1MjQsImV4cCI6MTU5Mzc2MDUyNCwibmJmIjoxNTkzMzI4NTI0LCJqdGkiOiI4ZTA1YzhmMGJmMTM1OTY5ZGQ4MjdiNWMyMWM1MTg1NSJ9.WHbIQ0084c0k3GtTRsA7sIOtHd04kSuLbcvXXRnOeV8'
   private datePipe = new DatePipe('en-SG');
+
+  constructor(private http: HttpClient, private spinnerService: SpinnerService) { }
 
   getAutocompleteSearch(query: string) {
     let searchUrl = this.baseUrl + '/commonapi/search?searchVal=' + query + '&returnGeom=Y&getAddrDetails=Y&pageNum=1'
@@ -37,9 +41,12 @@ export class OneMapService {
     }
 
     return this.http.get(url, { params: params })
-      .pipe(map(responseData => {
-        return responseData['route_geometry']
-      }))
+      .pipe(
+        map(responseData => {
+          return responseData['route_geometry']
+        }),
+        catchError(err => this.handleError(err))
+      )
 
   }
 
@@ -57,4 +64,20 @@ export class OneMapService {
     }
     return forkJoin(geometryRouteObservables);
   }
+
+  handleError(error: HttpErrorResponse) {
+    let userErrorMsg = 'Unknown error occured. Please try again later.';
+    let apiErrorMsg: string = error.error.error;
+
+    if (error.status === 400 || error.status === 401) userErrorMsg = 'Error occured on server. We are working on it!';
+    if (error.status === 408) userErrorMsg = 'Request time out. Please try again later.'
+    if (error.status === 500) userErrorMsg = 'Internal server error. Please try again.'
+    if (apiErrorMsg.includes('Unable to get walk path')) userErrorMsg = 'Mo walking route found!'
+
+    console.log(error);
+    alertify.error(userErrorMsg);
+    this.spinnerService.mapIsChanging.next(false);
+    return throwError(userErrorMsg)
+  }
+
 }

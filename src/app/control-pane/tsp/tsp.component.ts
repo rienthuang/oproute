@@ -108,6 +108,8 @@ export class TspComponent implements OnInit, OnDestroy {
         this.mapService.resetAndBuildOptimizedMap(optimizedLocations, this.selectedTransitOption.value);
         this.controlPanelService.setActiveTab('directions');
         this.optimizeSpinner = false;
+      }, error => {
+        this.optimizeSpinner = false;
       })
   }
 

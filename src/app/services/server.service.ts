@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 import { LocationObj } from '../models/location.model';
 import { Coord } from '../models/coord.model';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import * as alertify from 'alertifyjs';
 
 @Injectable({ providedIn: 'root' })
 export class ServerService {
@@ -23,6 +25,15 @@ export class ServerService {
       transformedLocations.push(new Coord(name, lat, long));
     });
     let url = this.serverUrl + '/solve/tsp';
-    return this.http.post(url, transformedLocations);
+    return this.http.post(url, transformedLocations)
+      .pipe(
+        catchError(err => this.handleError(err))
+      )
+  }
+
+  handleError(error: HttpErrorResponse) {
+    let userErrorMsg = error.message;
+    alertify.error(userErrorMsg);
+    return throwError(userErrorMsg);
   }
 }
