@@ -1,22 +1,25 @@
 import { Subject } from 'rxjs';
-import { MapService } from './map.service';
 import { LocationObj } from "src/app/models/location.model";
+import { Injectable } from '@angular/core';
 
+@Injectable({ providedIn: 'root' })
 export class TspService {
 
   private locationsSelected: LocationObj[] = [];
-  private MAX_LOCATIONS = 6;
+  private optimizedLocations: LocationObj[] = [];
+  private customRoute: LocationObj[] = [];
+
+  private MAX_LOCATIONS = 9;
   private modeOfTransport = 'drive'
 
   public locationsSelectedChanged = new Subject<LocationObj[]>();
   public locationDeleted = new Subject<number>();
 
-
   getLocationsSelected(): LocationObj[] {
     return this.locationsSelected.slice();
   }
 
-  setLocationsSelected(newLocationsSelected: LocationObj[]) {
+  setLocationsSelected(newLocationsSelected: LocationObj[]): void {
     this.locationsSelected = newLocationsSelected.slice();
     this.locationsSelectedChanged.next(this.locationsSelected.slice());
   }
@@ -51,8 +54,22 @@ export class TspService {
 
   setModeOfTransport(type: string): void {
     this.modeOfTransport = type;
+  }
 
-    //TODO: Recalculate Routing if any is already done
+  getOptimizedLocations(): LocationObj[] {
+    return this.optimizedLocations.slice();
+  }
+
+  setOptimizedLocations(locations: LocationObj[]): void {
+    this.optimizedLocations = locations.slice();
+  }
+
+  getCustomRoute(): LocationObj[] {
+    return this.customRoute.slice();
+  }
+
+  setCustomRoute(newCustomRoute: LocationObj[]): void {
+    this.customRoute = newCustomRoute;
   }
 
 }

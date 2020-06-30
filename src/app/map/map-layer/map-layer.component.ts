@@ -3,6 +3,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { tileLayer, Marker, Polyline } from "leaflet";
 import { MapService } from 'src/app/services/map.service';
 import { Subscription } from 'rxjs';
+import { ControlPanelService } from 'src/app/services/control-panel.service';
 
 @Component({
   selector: 'app-map-layer',
@@ -11,6 +12,7 @@ import { Subscription } from 'rxjs';
 })
 export class MapLayerComponent implements OnInit, OnDestroy {
 
+  activeTab = 'home';
 
   showLandLayer = false;
   landTile = tileLayer('https://maps-{s}.onemap.sg/v3/Original/{z}/{x}/{y}.png', {
@@ -27,16 +29,24 @@ export class MapLayerComponent implements OnInit, OnDestroy {
   });
 
   markersLayer: Marker[] = [];
-  polylineLayer = [];
+  polylineLayer: Polyline[] = [];
+
+  optimizedMakerLayer: Marker[] = [];
+  optimizedPolylineLayer: Polyline[] = [];
 
   markersChangedSubscription: Subscription;
   polylineChangedSubscription: Subscription;
+  tabSubscription: Subscription;
 
-  constructor(private mapService: MapService) { }
+  constructor(private mapService: MapService, private controlPanelService: ControlPanelService) { }
 
   ngOnInit(): void {
     this.markersLayer = this.mapService.getMarkers();
     this.polylineLayer = this.mapService.getPolylineLayer();
+
+    this.tabSubscription = this.controlPanelService.tabChanged.subscribe(newActiveTab => {
+      this.activeTab = newActiveTab;
+    })
 
     this.markersChangedSubscription = this.mapService.markersChanged.subscribe((updatedMarkers: Marker[]) => {
       this.markersLayer = updatedMarkers;
@@ -45,6 +55,13 @@ export class MapLayerComponent implements OnInit, OnDestroy {
     this.polylineChangedSubscription = this.mapService.polylineChanged.subscribe((updatedPolyline: Polyline[]) => {
       this.polylineLayer = updatedPolyline;
     })
+
+    this.mapService.optimizedLayerBuilt.subscribe(optimizedLayer => {
+      this.optimizedPolylineLayer = optimizedLayer.polylines;
+      this.optimizedMakerLayer = optimizedLayer.markers;
+    })
+
+
   }
 
   ngOnDestroy(): void {

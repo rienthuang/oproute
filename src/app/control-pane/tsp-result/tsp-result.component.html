@@ -1,0 +1,45 @@
+<div class="result-list-container">
+
+  <!-- Header -->
+  <div class="mat-headline pane-title">
+    Optimized Route
+    <fa-icon (click)="closeControlPanel()" class="close-pane" [icon]="faCaretLeft"></fa-icon>
+  </div>
+
+  <!-- Result List -->
+  <div class="result-list" cdkDropList (cdkDropListDropped)="onDrop($event)">
+    <div class="list-box" *ngFor="let location of optimizedLocations; let i = index" cdkDrag>
+
+      <!-- Inline Icon -->
+      <div class="inline-icon">
+        <fa-icon *ngIf="i === 0" [icon]="faHome" size="lg"></fa-icon>
+        <mat-icon *ngIf="i > 0 && i < optimizedLocations.length-1">filter_{{i+1}}</mat-icon>
+        <fa-icon *ngIf="i === optimizedLocations.length-1" [icon]="faFlagCheckered" size="lg"></fa-icon>
+      </div>
+
+      <!-- Inline Text -->
+      <div
+        *ngIf="location.SEARCHVAL.includes('MULTI STOREY CAR PARK') || location.SEARCHVAL.includes('HDB-'); else rawSearchVal"
+        class="inline-text">
+        {{location.ADDRESS}}
+      </div>
+      <ng-template #rawSearchVal class="inline-text">
+        {{location.SEARCHVAL}}
+      </ng-template>
+    </div>
+  </div>
+
+  <!-- Buttons -->
+
+  <div *ngIf="listDirty" class="recalculate-button">
+    <button (click)="getOptimalRoute()" mat-raised-button>
+      Reset to Optimal Route
+    </button>
+  </div>
+
+  <div class="google-maps-button">
+    <button (click)="redirectToGoogleMap()" mat-raised-button>
+      Send to Google Maps!
+    </button>
+  </div>
+</div>

@@ -7,15 +7,14 @@ import { trigger, style, state, transition, animate } from '@angular/animations'
 import { MapService } from 'src/app/services/map.service';
 import { LocationObj } from 'src/app/models/location.model';
 import { Subscription } from 'rxjs';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { DatePipe } from '@angular/common';
 import { SpinnerService } from 'src/app/services/spinner.service';
+import { ServerService } from 'src/app/services/server.service';
 
 @Component({
   selector: 'app-tsp',
   templateUrl: './tsp.component.html',
   styleUrls: ['./tsp.component.css'],
-  providers: [TspService],
   // animations: [
   //   trigger('divFlyAnimation', [
   //     state('in', style({
@@ -56,20 +55,20 @@ export class TspComponent implements OnInit, OnDestroy {
   locationsChangedSubscription: Subscription;
 
   @ViewChild('transitOption') selectedTransitOption;
+  currentTransitOption;
 
-  constructor(private controlPanelService: ControlPanelService, private tspService: TspService, private mapService: MapService, private spinnerService: SpinnerService) { }
+  optimizeSpinner = false;
+
+  constructor(private controlPanelService: ControlPanelService, private tspService: TspService, private mapService: MapService, private spinnerService: SpinnerService, private serverService: ServerService) { }
 
   ngOnInit(): void {
     console.log('tspcomponent init');
 
     this.locationsSelected = this.tspService.getLocationsSelected();
     this.MAX_LOCATIONS = this.tspService.getMaxLocations();
+    this.currentTransitOption = this.tspService.getModeOfTransport();
 
-    this.tspService.locationsSelectedChanged.subscribe((updatedLocationsSelected: LocationObj[]) => {
-
-      console.log('locations changed captured');
-      console.log(updatedLocationsSelected);
-
+    this.locationsChangedSubscription = this.tspService.locationsSelectedChanged.subscribe((updatedLocationsSelected: LocationObj[]) => {
       this.locationsSelected = updatedLocationsSelected;
     })
   }
@@ -84,6 +83,7 @@ export class TspComponent implements OnInit, OnDestroy {
 
   transitChanged() {
     this.tspService.setModeOfTransport(this.selectedTransitOption.value);
+    this.currentTransitOption = this.selectedTransitOption.value;
     if (this.locationsSelected.length > 1) this.mapService.recalculateRoute(this.locationsSelected, this.selectedTransitOption.value);
   }
 
@@ -91,6 +91,26 @@ export class TspComponent implements OnInit, OnDestroy {
     this.tspService.deleteLocationAt(index);
     this.mapService.deletePolylineAt(index, this.tspService.getLocationsSelected(), this.selectedTransitOption.value, { color: 'red', weight: 5 })
     this.mapService.deleteMarkerAt(index);
+  }
+
+  solveTsp() {
+    this.optimizeSpinner = true;
+    this.tspService.setCustomRoute([]);
+
+    this.serverService.solveTsp(this.locationsSelected)
+      .subscribe((response: number[]) => {
+        let optimizedLocations = [];
+        response.forEach(order => {
+          optimizedLocations.push(this.locationsSelected[order])
+        });
+        console.log(optimizedLocations);
+        this.tspService.setOptimizedLocations(optimizedLocations);
+        this.mapService.resetAndBuildOptimizedMap(optimizedLocations, this.selectedTransitOption.value);
+        this.controlPanelService.setActiveTab('directions');
+        this.optimizeSpinner = false;
+      }, error => {
+        this.optimizeSpinner = false;
+      })
   }
 
 }

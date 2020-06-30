@@ -35,12 +35,7 @@ export class LocationSearchComponent implements OnInit {
   ngOnInit(): void {
     console.log('location search component init. index = ' + this.index);
 
-    let locationExist = this.tspService.getLocationAt(this.index);
-    if (locationExist) {
-      this.locationSelected = locationExist;
-      this.searchFormControl.setValue(locationExist);
-      this.optionSelected = true;
-    }
+    this.checkIfLocationExists();
 
     this.locationDeletedSubscription = this.tspService.locationDeleted.subscribe((deletedIndex) => {
       if (deletedIndex === this.index) {
@@ -53,6 +48,15 @@ export class LocationSearchComponent implements OnInit {
   ngOnDestroy(): void {
     console.log('search component index ' + this.index + ' destroyed');
     this.locationDeletedSubscription.unsubscribe();
+  }
+
+  checkIfLocationExists() {
+    let locationExist = this.tspService.getLocationAt(this.index);
+    if (locationExist) {
+      this.locationSelected = locationExist;
+      this.searchFormControl.setValue(locationExist);
+      this.optionSelected = true;
+    }
   }
 
   onSearchChange(searchValue: string): void {
@@ -70,7 +74,7 @@ export class LocationSearchComponent implements OnInit {
       let buildingName = locationObj['BUILDING'];
       let address = locationObj['ADDRESS'];
 
-      return buildingName !== 'NIL'
+      return buildingName !== 'NIL' && buildingName !== 'MULTI STOREY CAR PARK' && !buildingName.includes('HDB-')
         ? buildingName
         : address
     }
