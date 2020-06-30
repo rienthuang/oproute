@@ -74,7 +74,7 @@ export class LocationSearchComponent implements OnInit {
       let buildingName = locationObj['BUILDING'];
       let address = locationObj['ADDRESS'];
 
-      return buildingName !== 'NIL'
+      return buildingName !== 'NIL' && buildingName !== 'MULTI STOREY CAR PARK' && !buildingName.includes('HDB-')
         ? buildingName
         : address
     }
