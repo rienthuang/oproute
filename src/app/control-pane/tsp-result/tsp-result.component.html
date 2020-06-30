@@ -18,9 +18,14 @@
       </div>
 
       <!-- Inline Text -->
-      <div class="inline-text">
-        {{location.SEARCHVAL}}
+      <div
+        *ngIf="location.SEARCHVAL.includes('MULTI STOREY CAR PARK') || location.SEARCHVAL.includes('HDB-'); else rawSearchVal"
+        class="inline-text">
+        {{location.ADDRESS}}
       </div>
+      <ng-template #rawSearchVal class="inline-text">
+        {{location.SEARCHVAL}}
+      </ng-template>
     </div>
   </div>
 

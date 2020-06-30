@@ -38,7 +38,7 @@
 }
 
 .list-box {
-  padding: 10px;
+  padding: 5px;
   border-bottom: solid 1px #ccc;
   color: rgba(0, 0, 0, 0.87);
   align-items: center;
@@ -50,9 +50,10 @@
 
 .inline-icon {
   display: inline-block;
-  height: 30x;
+  height: 30px;
+  line-height: 30px;
   width: 30px;
-  padding-top: 5px;
+  text-align: center;
 }
 
 .mat-icon {
@@ -62,6 +63,8 @@
 .inline-text {
   display: inline-block;
   width: 290px;
+  height: 100%;
+  vertical-align: middle;
 }
 
 .cdk-drag-placeholder {
@@ -96,6 +99,7 @@
 .google-maps-button {
   width: 100%;
   padding-top: 15px;
+  margin-bottom: 10px;
   text-align: center;
 }
 
