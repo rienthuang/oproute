@@ -6,6 +6,7 @@ import { map, catchError } from "rxjs/operators";
 import { LocationObj } from '../models/location.model';
 import { Observable, forkJoin, throwError } from 'rxjs';
 import { SpinnerService } from './spinner.service';
+import { environment } from "../../environments/environment";
 import * as alertify from 'alertifyjs';
 
 
@@ -13,8 +14,7 @@ import * as alertify from 'alertifyjs';
 export class OneMapService {
 
   private baseUrl = 'https://developers.onemap.sg';
-  private token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjQ5NTcsInVzZXJfaWQiOjQ5NTcsImVtYWlsIjoiaHVhbmdibHVleW95b0BnbWFpbC5jb20iLCJmb3JldmVyIjpmYWxzZSwiaXNzIjoiaHR0cDpcL1wvb20yLmRmZS5vbmVtYXAuc2dcL2FwaVwvdjJcL3VzZXJcL3Nlc3Npb24iLCJpYXQiOjE1OTMzMjg1MjQsImV4cCI6MTU5Mzc2MDUyNCwibmJmIjoxNTkzMzI4NTI0LCJqdGkiOiI4ZTA1YzhmMGJmMTM1OTY5ZGQ4MjdiNWMyMWM1MTg1NSJ9.WHbIQ0084c0k3GtTRsA7sIOtHd04kSuLbcvXXRnOeV8'
-  private datePipe = new DatePipe('en-SG');
+  private token = environment.oneMapAPIKey;
 
   constructor(private http: HttpClient, private spinnerService: SpinnerService) { }
 

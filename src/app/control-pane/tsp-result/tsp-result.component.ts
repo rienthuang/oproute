@@ -62,8 +62,8 @@ export class TspResultComponent implements OnInit {
     let redirectToGoogle = this.googleUrl;
     this.optimizedLocations.forEach(location => {
       //Clean String Data as google maps don't understand some of OneMap's naming convention
-      let buildingName = location.BUILDING.replace('MULTI STOREY CARPARK', '').replace('HDB-', '');
-      let address = location.ADDRESS.replace('MULTI STOREY CARPARK', '').replace('HDB-', '');
+      let buildingName = location.BUILDING.replace('MULTI STOREY CARPARK', '').replace('MULTI STOREY CAR PARK', '').replace('HDB-', '');
+      let address = location.ADDRESS.replace('MULTI STOREY CARPARK', '').replace('MULTI STOREY CAR PARK', '').replace('HDB-', '');
       if (buildingName !== 'NIL' && buildingName !== address) {
         redirectToGoogle += buildingName + '+' + address + '/'
       } else if (buildingName === 'NIL') {

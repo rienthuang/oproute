@@ -5,12 +5,13 @@ import { LocationObj } from '../models/location.model';
 import { Coord } from '../models/coord.model';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { environment } from '../../environments/environment'
 import * as alertify from 'alertifyjs';
 
 @Injectable({ providedIn: 'root' })
 export class ServerService {
 
-  private serverUrl = 'http://localhost:8080/';
+  private serverUrl = environment.serverUrl;
 
   constructor(private http: HttpClient) { }
 
@@ -24,7 +25,7 @@ export class ServerService {
       let long = +location.LONGITUDE;
       transformedLocations.push(new Coord(name, lat, long));
     });
-    let url = this.serverUrl + '/solve/tsp';
+    let url = this.serverUrl + 'solve/tsp';
     return this.http.post(url, transformedLocations)
       .pipe(
         catchError(err => this.handleError(err))
@@ -32,7 +33,8 @@ export class ServerService {
   }
 
   handleError(error: HttpErrorResponse) {
-    let userErrorMsg = error.message;
+    let userErrorMsg = 'Server is down. Please try again later.';
+    console.log(error.message);
     alertify.error(userErrorMsg);
     return throwError(userErrorMsg);
   }

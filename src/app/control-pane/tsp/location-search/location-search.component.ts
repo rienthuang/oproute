@@ -33,7 +33,6 @@ export class LocationSearchComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log('location search component init. index = ' + this.index);
 
     this.checkIfLocationExists();
 
@@ -46,7 +45,6 @@ export class LocationSearchComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    console.log('search component index ' + this.index + ' destroyed');
     this.locationDeletedSubscription.unsubscribe();
   }
 
