@@ -41,11 +41,11 @@
   <!-- Compulsory Home Search Component -->
   <div class="search-container">
 
-    <div style="display: inline-block; height: 30x; width: 30px;">
+    <div class="search-icon">
       <fa-icon [icon]="faHome" size="lg"></fa-icon>
     </div>
 
-    <div style="display: inline-block; width: 320px;">
+    <div class="home-search-component">
       <app-location-search [location_index]="0"></app-location-search>
     </div>
 
@@ -59,7 +59,7 @@
       <!-- <div class="search-container" *ngIf="i+1<MAX_LOCATIONS"> -->
 
       <!-- Icon -->
-      <div style="display: inline-block; height: 30x; width: 30px;">
+      <div class="search-icon">
         <!-- Conditions to determine which icon to display -->
         <mat-icon *ngIf="i+2 < MAX_LOCATIONS; else endIcon">filter_{{i+2}}</mat-icon>
 
@@ -70,7 +70,7 @@
       </div>
 
       <!-- Search Component -->
-      <div style="display: inline-block; width: 295px;">
+      <div class="search-component">
         <!-- i+1 to account for the initial compulsory home location. Thus i will represent index in locations array -->
         <app-location-search [location_index]="i+1"></app-location-search>
       </div>

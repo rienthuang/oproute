@@ -62,6 +62,22 @@
   padding-top: 10px;
 }
 
+.search-icon {
+  display: inline-block;
+  height: 30px;
+  width: 30px;
+}
+
+.home-search-component {
+  display: inline-block;
+  width: 295px;
+}
+
+.search-component {
+  display: inline-block;
+  width: 295px;
+}
+
 .calculate-route-button {
   width: 100%;
   padding-top: 15px;
@@ -77,4 +93,26 @@
 
 .calculate-route-button > .mat-raised-button:hover {
   background-color: #074c8a;
+}
+
+@media only screen and (max-width: 600px) {
+  .tsp-container {
+    width: 100%;
+  }
+
+  .close-pane {
+    padding-right: 5px;
+  }
+
+  .search-container {
+    width: calc(100% - 40px);
+  }
+
+  .home-search-component {
+    width: calc(100% - 30px);
+  }
+
+  .search-component {
+    width: calc(100% - 30px - 24px);
+  }
 }

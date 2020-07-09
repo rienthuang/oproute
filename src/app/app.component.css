@@ -42,3 +42,16 @@
   margin-top: -50px;
   margin-left: -50px;
 }
+
+@media only screen and (max-width: 600px) {
+  .mat-sidenav {
+    width: 100%;
+    height: 93%;
+    left: 0px;
+    top: 0px;
+  }
+
+  .toggle-controlpane-container {
+    top: 2px;
+  }
+}
