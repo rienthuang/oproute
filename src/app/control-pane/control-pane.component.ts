@@ -42,11 +42,20 @@ export class ControlPaneComponent implements OnInit {
 
   onTabClick(tabClicked: string) {
     if (tabClicked === 'directions' && this.directionsDisabled) return;
+    if (tabClicked === 'home' && tabClicked === this.controlPanelService.getActiveTab()) {
+      this.controlPanelService.closeControlPanel();
+      return;
+    }
+
     this.controlPanelService.setActiveTab(tabClicked);
   }
 
   isActiveIcon(icon: string) {
     return icon === this.activeTab ? { color: 'white' } : {};
+  }
+
+  closeControlPane() {
+    this.controlPanelService.closeControlPanel();
   }
 
 }

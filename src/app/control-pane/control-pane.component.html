@@ -22,7 +22,7 @@
 </div>
 
 
-<div class="pane-content-container">
+<div class="pane-content-container" (dblclick)="closeControlPane()">
   <!-- components will be placed here -->
   <!-- display on ngIf -->
   <app-tsp *ngIf="activeTab==='home'"></app-tsp>

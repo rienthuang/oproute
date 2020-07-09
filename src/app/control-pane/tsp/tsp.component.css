@@ -10,6 +10,7 @@
   text-align: center;
   color: white;
   background-color: #0074d9;
+  cursor: pointer;
 }
 
 .close-pane {
