@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewEncapsulation, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewEncapsulation, ViewChild, ElementRef } from '@angular/core';
 import { OneMapService } from 'src/app/services/onemap.service';
 import { FormControl } from '@angular/forms';
 import { TspService } from 'src/app/services/tsp.service';
@@ -22,6 +22,7 @@ export class LocationSearchComponent implements OnInit {
   optionSelected = false;
 
   @Input('location_index') index;
+  @ViewChild('searchInput') inputEl: ElementRef;
   @ViewChild(MatAutocompleteTrigger) autocomplete: MatAutocompleteTrigger;
 
   locationDeletedSubscription: Subscription;
@@ -42,6 +43,10 @@ export class LocationSearchComponent implements OnInit {
         this.searchFormControl.setValue(this.locationSelected)
       }
     })
+  }
+
+  ngAfterViewInit() {
+    setTimeout(() => this.inputEl.nativeElement.focus());
   }
 
   ngOnDestroy(): void {
