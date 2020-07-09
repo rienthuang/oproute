@@ -6,7 +6,7 @@ This project is deployed on AWS EC2 and can be access via http://rient.tk
 
 Ensure you are on the Angular 9+
 
-`npm install`
+`npm install` <br>
 `ng serve`
 
 On your Chrome browser, go to http://localhost:4200
