@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs';
 })
 export class AppComponent implements OnInit, OnDestroy, AfterViewInit {
 
-  controlPaneOpened = true;
+  controlPaneOpened = window.screen.width <= 815 ? false : true;
   title = 'angular-leaflet';
   showMapSpinner = false;
 
