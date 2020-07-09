@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, ElementRef } from '@angular/core';
 
 import { faCaretLeft, faCar, faBusAlt, faWalking, faRoute, faHome, faFlagCheckered } from "@fortawesome/free-solid-svg-icons";
 import { ControlPanelService } from 'src/app/services/control-panel.service';
@@ -62,8 +62,6 @@ export class TspComponent implements OnInit, OnDestroy {
   constructor(private controlPanelService: ControlPanelService, private tspService: TspService, private mapService: MapService, private spinnerService: SpinnerService, private serverService: ServerService) { }
 
   ngOnInit(): void {
-    console.log('tspcomponent init');
-
     this.locationsSelected = this.tspService.getLocationsSelected();
     this.MAX_LOCATIONS = this.tspService.getMaxLocations();
     this.currentTransitOption = this.tspService.getModeOfTransport();
@@ -103,7 +101,7 @@ export class TspComponent implements OnInit, OnDestroy {
         response.forEach(order => {
           optimizedLocations.push(this.locationsSelected[order])
         });
-        console.log(optimizedLocations);
+        // console.log(optimizedLocations);
         this.tspService.setOptimizedLocations(optimizedLocations);
         this.mapService.resetAndBuildOptimizedMap(optimizedLocations, this.selectedTransitOption.value);
         this.controlPanelService.setActiveTab('directions');
@@ -112,5 +110,4 @@ export class TspComponent implements OnInit, OnDestroy {
         this.optimizeSpinner = false;
       })
   }
-
 }

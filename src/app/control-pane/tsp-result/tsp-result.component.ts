@@ -36,7 +36,7 @@ export class TspResultComponent implements OnInit {
     } else {
       this.optimizedLocations = this.tspService.getOptimizedLocations();
     }
-    console.log(this.optimizedLocations);
+    // console.log(this.optimizedLocations);
   }
 
   closeControlPanel() {

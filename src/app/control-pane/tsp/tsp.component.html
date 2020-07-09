@@ -77,7 +77,11 @@
 
       <!-- Delete Icon -->
       <div style="display: inline-block;">
-        <mat-icon style="cursor: pointer;" (click)="deleteLocation(i+1)">delete</mat-icon>
+        <mat-icon
+          style="cursor: pointer;"
+          (click)="deleteLocation(i+1)">
+          delete
+        </mat-icon>
       </div>
 
     </div>
@@ -89,6 +93,9 @@
       Optimize!
       <!-- <fa-icon [icon]="faRoute" size="3x"></fa-icon> -->
     </button>
-    <mat-spinner style="margin:0 auto;" [diameter]=65 *ngIf="optimizeSpinner"></mat-spinner>
+    <mat-spinner
+      style="margin:0 auto;"
+      [diameter]=50 *ngIf="optimizeSpinner"
+      autofocus></mat-spinner>
   </div>
 </div>
