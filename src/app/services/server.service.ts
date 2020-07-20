@@ -32,6 +32,11 @@ export class ServerService {
       )
   }
 
+  getToken() {
+    let url = this.serverUrl + 'api/token';
+    return this.http.get(url);
+  }
+
   handleError(error: HttpErrorResponse) {
     let userErrorMsg = 'Server is down. Please try again later.';
     console.log(error.message);

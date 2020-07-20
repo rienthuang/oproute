@@ -6,17 +6,21 @@ import { map, catchError } from "rxjs/operators";
 import { LocationObj } from '../models/location.model';
 import { Observable, forkJoin, throwError } from 'rxjs';
 import { SpinnerService } from './spinner.service';
-import { environment } from "../../environments/environment";
 import * as alertify from 'alertifyjs';
+import { ServerService } from './server.service';
 
 
 @Injectable({ providedIn: 'root' })
 export class OneMapService {
 
   private baseUrl = 'https://developers.onemap.sg';
-  private token = environment.oneMapAPIKey;
+  private token;
 
-  constructor(private http: HttpClient, private spinnerService: SpinnerService) { }
+  constructor(private http: HttpClient, private spinnerService: SpinnerService, private serverService: ServerService) {
+    serverService.getToken().subscribe(response => {
+      this.token = response['access_token'];
+    })
+  }
 
   getAutocompleteSearch(query: string) {
     let searchUrl = this.baseUrl + '/commonapi/search?searchVal=' + query + '&returnGeom=Y&getAddrDetails=Y&pageNum=1'
@@ -47,7 +51,6 @@ export class OneMapService {
         }),
         catchError(err => this.handleError(err))
       )
-
   }
 
   getGeometryRoutes(locations: LocationObj[], transportMode: string): Observable<string[]> {
@@ -69,7 +72,7 @@ export class OneMapService {
     let userErrorMsg = 'Unknown error occured. Please try again later.';
     let apiErrorMsg: string = error.error.error;
 
-    if (error.status === 400 || error.status === 401) userErrorMsg = 'Error occured on server. We are working on it!';
+    if (error.status === 400 || error.status === 401) userErrorMsg = 'Session expired. Please refresh the browser.';
     if (error.status === 408) userErrorMsg = 'Request time out. Please try again later.'
     if (error.status === 500) userErrorMsg = 'Internal server error. Please try again.'
     if (apiErrorMsg.includes('Unable to get walk path')) userErrorMsg = 'Mo walking route found!'
