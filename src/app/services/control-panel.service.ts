@@ -9,10 +9,15 @@ export class ControlPanelService {
   private controlPanel: MatSidenav;
 
   public tabChanged = new Subject<string>();
+  public tabDisable = new Subject<string>();
 
   setActiveTab(newActiveTab: string) {
     this.activeTab = newActiveTab;
     this.tabChanged.next(this.activeTab);
+  }
+
+  setDisabledTab(toDisable: string) {
+    this.tabDisable.next(toDisable);
   }
 
   getActiveTab() {

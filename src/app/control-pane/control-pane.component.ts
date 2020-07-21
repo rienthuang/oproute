@@ -24,20 +24,28 @@ export class ControlPaneComponent implements OnInit {
   activeTab;
   directionsDisabled = true;
 
-  tabListenerSubscription: Subscription;
+  tabChangeListenerSubscription: Subscription;
+  tabDisableListenerSubscription: Subscription;
 
   constructor(private controlPanelService: ControlPanelService) { }
 
   ngOnInit(): void {
     this.activeTab = this.controlPanelService.getActiveTab();
-    this.tabListenerSubscription = this.controlPanelService.tabChanged.subscribe(newActiveTab => {
+
+    this.tabChangeListenerSubscription = this.controlPanelService.tabChanged.subscribe(newActiveTab => {
       this.activeTab = newActiveTab;
       if (newActiveTab === 'directions') this.directionsDisabled = false;
     })
+
+    this.tabDisableListenerSubscription = this.controlPanelService.tabDisable.subscribe(toDisable => {
+      if (toDisable === 'directions') this.directionsDisabled = true;
+    })
+
   }
 
   ngOnDestroy() {
-    this.tabListenerSubscription.unsubscribe();
+    this.tabChangeListenerSubscription.unsubscribe();
+    this.tabDisableListenerSubscription.unsubscribe();
   }
 
   onTabClick(tabClicked: string) {

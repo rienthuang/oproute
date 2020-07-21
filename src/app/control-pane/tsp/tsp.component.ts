@@ -94,9 +94,10 @@ export class TspComponent implements OnInit, OnDestroy {
 
   solveTsp() {
     this.optimizeSpinner = true;
+    this.controlPanelService.setDisabledTab('directions');
     this.tspService.setCustomRoute([]);
 
-    this.serverService.solveTsp(this.locationsSelected)
+    this.serverService.solveTsp(this.locationsSelected, this.isRoundTrip)
       .subscribe((response: number[]) => {
         let optimizedLocations = [];
         response.forEach(order => {
