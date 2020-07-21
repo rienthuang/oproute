@@ -63,7 +63,7 @@ export class ControlPaneComponent implements OnInit {
   }
 
   closeControlPane() {
-    this.controlPanelService.closeControlPanel();
+    if (window.screen.width <= 815) this.controlPanelService.closeControlPanel();
   }
 
 }
