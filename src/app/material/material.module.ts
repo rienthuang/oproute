@@ -10,6 +10,8 @@ import { MatInputModule } from "@angular/material/input";
 import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { DragDropModule } from "@angular/cdk/drag-drop";
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
+
 
 const MaterialComponents = [
   MatSliderModule,
@@ -22,7 +24,8 @@ const MaterialComponents = [
   MatInputModule,
   MatTooltipModule,
   MatProgressSpinnerModule,
-  DragDropModule
+  DragDropModule,
+  MatSlideToggleModule
 ]
 
 

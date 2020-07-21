@@ -49,6 +49,7 @@ export class TspComponent implements OnInit, OnDestroy {
   faFlagCheckered = faFlagCheckered;
 
   locationsSelected: LocationObj[];
+  isRoundTrip = true;
 
   MAX_LOCATIONS;
 

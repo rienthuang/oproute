@@ -38,6 +38,13 @@
     </mat-button-toggle-group>
   </div>
 
+  <!-- Slide Toggle -->
+  <div class="roundtrip-toggle">
+    <mat-slide-toggle [(ngModel)]="isRoundTrip" color="primary">
+      End at home base
+    </mat-slide-toggle>
+  </div>
+
   <!-- Compulsory Home Search Component -->
   <div class="search-container">
 
@@ -61,11 +68,11 @@
       <!-- Icon -->
       <div class="search-icon">
         <!-- Conditions to determine which icon to display -->
-        <mat-icon *ngIf="i+2 < MAX_LOCATIONS; else endIcon">filter_{{i+2}}</mat-icon>
+        <mat-icon *ngIf="i+2 <= MAX_LOCATIONS">filter_{{i+2}}</mat-icon>
 
-        <ng-template #endIcon>
+        <!-- <ng-template #endIcon>
           <fa-icon [icon]="faFlagCheckered" size="lg"></fa-icon>
-        </ng-template>
+        </ng-template> -->
 
       </div>
 
