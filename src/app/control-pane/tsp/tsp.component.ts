@@ -49,7 +49,7 @@ export class TspComponent implements OnInit, OnDestroy {
   faFlagCheckered = faFlagCheckered;
 
   locationsSelected: LocationObj[];
-  isRoundTrip = true;
+  isAtoZ: boolean;
 
   MAX_LOCATIONS;
 
@@ -66,6 +66,7 @@ export class TspComponent implements OnInit, OnDestroy {
     this.locationsSelected = this.tspService.getLocationsSelected();
     this.MAX_LOCATIONS = this.tspService.getMaxLocations();
     this.currentTransitOption = this.tspService.getModeOfTransport();
+    this.isAtoZ = this.tspService.getIsAtoZ();
 
     this.locationsChangedSubscription = this.tspService.locationsSelectedChanged.subscribe((updatedLocationsSelected: LocationObj[]) => {
       this.locationsSelected = updatedLocationsSelected;
@@ -97,14 +98,15 @@ export class TspComponent implements OnInit, OnDestroy {
     this.controlPanelService.setDisabledTab('directions');
     this.tspService.setCustomRoute([]);
 
-    this.serverService.solveTsp(this.locationsSelected, this.isRoundTrip)
+    this.serverService.solveTsp(this.locationsSelected, this.isAtoZ)
       .subscribe((response: number[]) => {
         let optimizedLocations = [];
         response.forEach(order => {
           optimizedLocations.push(this.locationsSelected[order])
         });
-        // console.log(optimizedLocations);
+
         this.tspService.setOptimizedLocations(optimizedLocations);
+        this.tspService.setIsAtoZ(this.isAtoZ);
         this.mapService.resetAndBuildOptimizedMap(optimizedLocations, this.selectedTransitOption.value);
         this.controlPanelService.setActiveTab('directions');
         this.optimizeSpinner = false;

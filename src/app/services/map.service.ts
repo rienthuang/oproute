@@ -6,6 +6,7 @@ import { PolylineUtilService } from './polyline-util.service';
 import { Subject, Observable } from 'rxjs';
 import { LocationObj } from '../models/location.model';
 import { SpinnerService } from './spinner.service';
+import { TspService } from './tsp.service';
 
 @Injectable({ providedIn: 'root' })
 export class MapService {
@@ -14,8 +15,8 @@ export class MapService {
   numberedIconsUrl = 'assets/img/numbered_markers/'
 
   flagIcon: Icon = new Icon({
-    iconUrl: 'assets/img/flag2.png',
-    iconSize: [45, 61],
+    iconUrl: 'assets/img/flag.png',
+    iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
     shadowSize: [41, 41]
@@ -57,7 +58,8 @@ export class MapService {
   constructor(
     private oneMapService: OneMapService,
     private polylineUtilService: PolylineUtilService,
-    private spinnerService: SpinnerService
+    private spinnerService: SpinnerService,
+    private tspService: TspService
   ) { }
 
   initializeMap(map: Map) {
@@ -174,16 +176,20 @@ export class MapService {
   }
 
   addNumberedMarkers(locations: LocationObj[], layer: string): void {
+    let isAtoZ = this.tspService.getIsAtoZ();
     for (let i = 0; i < locations.length; i++) {
       let latitude = locations[i]['LATITUDE'];
       let longitude = locations[i]['LONGITUDE'];
       let icon;
 
-      if (i === locations.length - 1) continue;
+      if (i === locations.length - 1 && !isAtoZ) continue;
 
-      i === 0
-        ? icon = this.homeIcon
-        : icon = new Icon({
+      if (i === 0) {
+        icon = this.homeIcon;
+      } else if (i === locations.length - 1 && isAtoZ) {
+        icon = this.flagIcon;
+      } else {
+        icon = new Icon({
           iconUrl: this.numberedIconsUrl + 'marker' + (i + 1) + '.png',
           shadowUrl: 'assets/img/marker-shadow.png',
           iconSize: [28, 41],
@@ -191,6 +197,7 @@ export class MapService {
           popupAnchor: [1, -34],
           shadowSize: [41, 41]
         });
+      }
 
       let marker = new Marker([+latitude, +longitude], { icon: icon });
       if (layer === 'optimized') this.optimizedMarkersLayer.push(marker);

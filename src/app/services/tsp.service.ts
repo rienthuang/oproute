@@ -11,6 +11,7 @@ export class TspService {
 
   private MAX_LOCATIONS = 9;
   private modeOfTransport = 'drive'
+  private isAtoZ = false;
 
   public locationsSelectedChanged = new Subject<LocationObj[]>();
   public locationDeleted = new Subject<number>();
@@ -70,6 +71,14 @@ export class TspService {
 
   setCustomRoute(newCustomRoute: LocationObj[]): void {
     this.customRoute = newCustomRoute;
+  }
+
+  getIsAtoZ() {
+    return this.isAtoZ;
+  }
+
+  setIsAtoZ(newAtoZ: boolean) {
+    this.isAtoZ = newAtoZ;
   }
 
 }

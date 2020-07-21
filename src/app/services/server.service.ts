@@ -15,7 +15,7 @@ export class ServerService {
 
   constructor(private http: HttpClient) { }
 
-  solveTsp(locations: LocationObj[]): Observable<any> {
+  solveTsp(locations: LocationObj[], isAtoZ: boolean): Observable<any> {
 
     let transformedLocations: Coord[] = [];
 
@@ -25,7 +25,12 @@ export class ServerService {
       let long = +location.LONGITUDE;
       transformedLocations.push(new Coord(name, lat, long));
     });
+
     let url = this.serverUrl + 'solve/tsp';
+    isAtoZ
+      ? url += '/AtoZ'
+      : url += '/roundtrip'
+
     return this.http.post(url, transformedLocations)
       .pipe(
         catchError(err => this.handleError(err))
