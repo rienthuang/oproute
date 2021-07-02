@@ -1,6 +1,8 @@
 # OpRoute
 
-This project is deployed on Google Cloud Platform Compute Engine and can be accessed via http://rient.tk
+This project is deployed on Google Cloud Platform Compute Engine and can be accessed via https://oproute-139c5.web.app/
+
+The backend server is currently not hosted as I am still looking for a free hosting service. As such, you will face errors plotting the routes between places.
 
 ## Build
 
