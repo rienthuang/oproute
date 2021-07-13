@@ -1,8 +1,10 @@
 # OpRoute
 
-This project is deployed on Google Cloud Platform Compute Engine and can be accessed via https://oproute-139c5.web.app/
+This project is deployed on Google Cloud Platform Cloud Storage Bucket and can be accessed via http://oproute-server.et.r.appspot.com. Please ensure you access the link without https.
 
-The backend server is currently not hosted as I am still looking for a free hosting service. As such, you will face errors plotting the routes between places.
+The backend server is currently hosted on Google Cloud Platform Compute Engine. The server will be down at times as I've yet to optimise it to be always free.
+
+The backend server does not have an SSL certificate and there is no intention to get one as it will bring up the cost of running it.
 
 ## Build
 
